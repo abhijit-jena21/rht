@@ -56,7 +56,7 @@ class _GridOneState extends State<GridOne> {
             myItems(AssetImage('././assets/images/armchair.png'), 'Furniture'),
             myItems(AssetImage('././assets/images/dumbbell.png'), 'Fitness'),
             myItems(AssetImage('././assets/images/boxes.png'), 'Space Saver'),
-            myItems(AssetImage('././assets/images/cutlery.png'), ('Kitchen')),
+            myItems(AssetImage('././assets/images/cutlery.png'), 'Kitchen'),
           ],
           staggeredTiles: [
             StaggeredTile.extent(1, 100.0),

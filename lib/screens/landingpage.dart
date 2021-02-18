@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../widgets/appbar.dart';
 import '../widgets/carousel.dart';
 import '../widgets/grid.dart';
+import '../widgets/locationpicker.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -41,7 +42,10 @@ class _LandingPageState extends State<LandingPage> {
       body: Container(
         child: ListView(
           shrinkWrap: true,
-          children: [imageCarousel(items), GridOne()],
+          children: [
+            LocationPicker(),
+            imageCarousel(items),
+            GridOne()],
         ),
       ),
     );

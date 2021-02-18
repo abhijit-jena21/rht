@@ -27,6 +27,12 @@ ThemeData basicTheme() {
         fontSize: 10.0,
         color: Colors.black87,
       ),
+      bodyText2: base.bodyText1.copyWith(
+        fontFamily: 'Montserrat',
+        fontWeight: FontWeight.bold,
+        fontSize: 10.0,
+        color: Colors.white,
+      ),
     );
   }
 
