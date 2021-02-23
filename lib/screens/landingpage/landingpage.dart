@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rht/services/carousel_service.dart';
+import '../../services/carousel_service.dart';
 import 'dart:convert';
 
-import '../widgets/appbar.dart';
-import '../widgets/carousel.dart';
-import '../widgets/grid.dart';
-import '../widgets/locationpicker.dart';
+import '../../widgets/appbar.dart';
+import '../../widgets/carousel.dart';
+import './grid.dart';
+import './locationpicker.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -25,10 +25,10 @@ class _LandingPageState extends State<LandingPage> {
   _getAllSliders() async {
     var sliders = await _carouselService.getSliders();
     var result = json.decode(sliders.body);
-    result['data'].forEach((data) {
+    result['carousel'].forEach((data) {
       if (mounted) {
         setState(() {
-          items.add(NetworkImage(data['image_url']));
+          items.add(NetworkImage(data));
         });
       }
     });

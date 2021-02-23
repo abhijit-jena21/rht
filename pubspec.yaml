@@ -36,6 +36,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_custom_clippers: ^1.1.2
+  flutter_otp: ^0.3.2
+  fluttertoast: ^7.1.8
+  dio: ^3.0.10
+  pinput: ^0.2.0
+  shared_preferences: ^0.5.12+4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

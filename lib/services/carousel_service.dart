@@ -1,4 +1,4 @@
-import '../widgets/carousel_repo.dart';
+import '../services/carousel_repo.dart';
 
 class CarouselService {
   CarouselRepository _carouselRepository;
@@ -6,6 +6,6 @@ class CarouselService {
     _carouselRepository = CarouselRepository();
   }
   getSliders() async {
-    return await _carouselRepository.httpGet('sliders');
+    return await _carouselRepository.httpGet('carousel');
   }
 }

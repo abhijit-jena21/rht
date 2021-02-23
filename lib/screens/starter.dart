@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/navigationbar.dart';
 import '../screens/departments.dart';
-import '../screens/landingpage.dart';
+import './landingpage/landingpage.dart';
 import '../screens/wishlist.dart';
 import '../screens/profile.dart';
 
