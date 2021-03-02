@@ -42,6 +42,7 @@ dev_dependencies:
   dio: ^3.0.10
   pinput: ^0.2.0
   shared_preferences: ^0.5.12+4
+  cached_network_image: ^2.5.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -67,6 +68,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
   - assets/images/
+  - assets/images/location/
+  # - assets/images/subcategories/
     # - assets/images/p2.jpg
     # - assets/images/armchair.png
     # - assets/images/boxes.png

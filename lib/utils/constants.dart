@@ -17,13 +17,6 @@ final kBoxDecorationStyle = BoxDecoration(
     color: Color(0xFFFFFFFF),
     borderRadius: BorderRadius.circular(20.0),
     border: Border.all(color: Color(0xFFFFA751), width: 2.0)
-    // boxShadow: [
-    //   BoxShadow(
-    //     color: Colors.black12,
-    //     blurRadius: 6.0,
-    //     offset: Offset(0,2),
-    //   ),
-    // ]
     );
 
 final kInputDecorationStyle = InputDecoration(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../screens/otp/otp_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/constants.dart';
@@ -116,11 +117,11 @@ class _LoginScreenState extends State<LoginScreen> {
           if (res.result == 'Welcome Buddy,Enter Otp!') {
             myNavigator = MyNavigator(_phno, _from);
             myNavigator.goToOtp(context);
-            final SharedPreferences sharedPreferences =
-                await SharedPreferences.getInstance();
-            sharedPreferences.setString('phone', _phno);
+            // final SharedPreferences sharedPreferences =
+            //     await SharedPreferences.getInstance();
+            // sharedPreferences.setString('phone', _phno);
             
-            // OtpScreen(_phno, _from);
+            OtpScreen(_phno, _from);
           } else if (res.result == 'Not Registered!') {
             Fluttertoast.showToast(
                 msg: 'User doesn\'t exist',

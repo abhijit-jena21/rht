@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../my_navigator.dart';
 import '../../services/authservice.dart';
@@ -39,7 +40,7 @@ class _OtpFormState extends State<OtpForm> {
 
   void auth(otp, number, from) async {
     await AuthService().authHandler(otp, number, from).then(
-      (val) {
+      (val) async{
         print(val);
         final Map parsed = json.decode(val.toString());
         final res = Res.fromJson(parsed);
@@ -48,6 +49,9 @@ class _OtpFormState extends State<OtpForm> {
         if (res.result == 'The signUp authentication is successful!' ||
             res.result == 'The Login authentication is successful!') {
           MyNavigator.goToHome(context);
+          final SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+            sharedPreferences.setString('phone', number);
         } else if (res.error == 'OTP Did not Match!') {
           Fluttertoast.showToast(
               msg: 'Please enter correct OTP',

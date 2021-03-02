@@ -1,9 +1,31 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:rht/screens/starter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../my_navigator.dart';
 
 String finalPhone;
+String finalId;
+String finalLocationId;
+String finalLocation;
+
+class UserId {
+  String id;
+
+  UserId({this.id});
+
+  UserId.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    return data;
+  }
+}
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,16 +33,81 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void initState() {
-    getValidationData().whenComplete(() async {
-      if(finalPhone == null)
-        Timer(Duration(seconds: 3), () => MyNavigator.goToSignup(context));
-      else
-        Timer(Duration(seconds: 3), () => MyNavigator.goToHome(context));
-    });
-    super.initState();
-    
+  Dio dio = new Dio();
+  String userId;
+
+  void userCreate() async {
+    final String pathUrl = "http://10.0.3.2:8080/api/usercreation";
+    Response response = await dio.get(pathUrl);
+    var responseData = response.data;
+    print(responseData);
+    var user = UserId.fromJson(json.decode(responseData));
+    print("here" + user.id);
+    userId = user.id;
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('userId', userId);
   }
+
+  void initState() {
+    userCreate();
+    getUserId().whenComplete(() async {
+      // print("here2" + finalLocationId);
+      if (finalId == null && finalLocation == null)
+        Timer(
+            Duration(seconds: 3),
+            () => {
+                  MyNavigator.goToLocation(context),
+                });
+      else
+        Timer(
+            Duration(seconds: 3),
+            () => {
+                  // MyNavigator.goToHome(context),
+                  Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Starter(title: finalLocation, locationId: finalLocationId)),
+                (_) => false)
+                });
+    });
+
+    // getValidationData().whenComplete(() async {
+    //   // if(finalPhone == null)
+    //   //   Timer(Duration(seconds: 3), () => MyNavigator.goToSignup(context));
+    //   // else
+    //   Timer(
+    //       Duration(seconds: 3),
+    //       () => {
+    //             MyNavigator.goToLocation(context),
+    //           });
+    // });
+    super.initState();
+  }
+
+  Future getUserId() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    var obtainedId = sharedPreferences.getString('userId');
+    var obtainedLocationId = sharedPreferences.getString('locationId');
+    var obtainedLocation = sharedPreferences.getString('location');
+
+    setState(() {
+      finalId = obtainedId;
+      finalLocationId = obtainedLocationId;
+      finalLocation = obtainedLocation;
+    });
+  }
+
+  // Future getUserLocation() async {
+  //   final SharedPreferences sharedPreferences =
+  //       await SharedPreferences.getInstance();
+
+  //   setState(() {
+  //     finalLocation = obtainedLocation;
+  //   });
+  // }
 
   Future getValidationData() async {
     final SharedPreferences sharedPreferences =

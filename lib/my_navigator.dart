@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import './screens/subcategories.dart';
 import './screens/otp/otp_screen.dart';
 
 class MyNavigator {
   String number;
   String from;
+  String id;
   Function func;
   MyNavigator(this.number, this.from);
+  MyNavigator.category(this.id);
   static void goToSignup(BuildContext context) {
     Navigator.pushNamed(context, "/signup");
   }
@@ -19,7 +22,17 @@ class MyNavigator {
     Navigator.pushNamed(context, "/login");
   }
 
+  static void goToLocation(BuildContext context) {
+    // Navigator.pushNamed(context, "/location");
+    Navigator.pushNamedAndRemoveUntil(context, "/location", (_) => false);
+  }
+
   static void goToHome(BuildContext context) {
-    Navigator.pushNamed(context, "/home");
+    Navigator.pushNamedAndRemoveUntil(context, "/home", (_) => false);
+  }
+
+  void goToCategory(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SubCategories(id)));
   }
 }
