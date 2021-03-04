@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:rht/widgets/productlist.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // import '../widgets/productcard.dart';
@@ -11,9 +9,10 @@ import '../models/product.dart';
 
 class TabBody extends StatefulWidget {
   final String locationId;
+  final String userId;
   final String pathUrl;
   final String subcategoryId;
-  TabBody(this.locationId, this.pathUrl,this.subcategoryId);
+  TabBody(this.locationId, this.userId, this.pathUrl, this.subcategoryId);
   @override
   _TabBodyState createState() => _TabBodyState();
 }
@@ -25,16 +24,17 @@ class _TabBodyState extends State<TabBody> {
     print(locationid);
     final String pathUrl = widget.pathUrl;
     try {
-      print('here22');
+      // print('here22');
       return await dio.post(pathUrl,
-          data: {"id": locationid,
-                "sub": subcategoryid,
+          data: {
+            "id": locationid,
+            "sub": subcategoryid,
           },
           options: Options(headers: {
             'Content-type': 'application/json; charset=UTF-8',
           }));
     } on DioError catch (e) {
-      print('here33');
+      // print('here33');
       Fluttertoast.showToast(
           msg: e.response.data['msg'],
           toastLength: Toast.LENGTH_SHORT,
@@ -42,17 +42,18 @@ class _TabBodyState extends State<TabBody> {
           textColor: Colors.white,
           fontSize: 15.0);
     }
-    print("here");
+    // print("here");
   }
 
   Future<List<Product>> _getProducts() async {
     // List<Product> products = [];
     // var products;
-    Response response = await productlocation(widget.locationId,widget.subcategoryId);
-    print(response.data);
+    Response response =
+        await productlocation(widget.locationId, widget.subcategoryId);
+    // print(response.data);
     var responseData = response.data;
     // print(data);
-    print('some');
+    // print('some');
 
     return (responseData as List).map((x) => Product.fromJson(x)).toList();
 
@@ -146,7 +147,7 @@ class _TabBodyState extends State<TabBody> {
                   );
                 } else {
                   print(snapshot.data);
-                  return Container(child: ProductList(snapshot.data));
+                  return Container(child: ProductList(snapshot.data, widget.userId));
                 }
               } else if (snapshot.connectionState == ConnectionState.none) {
                 return Text(

@@ -8,9 +8,10 @@ import './grid.dart';
 import './locationpicker.dart';
 
 class LandingPage extends StatefulWidget {
-  final String title;
+  final String location;
   final String locationId;
-  LandingPage({this.title, this.locationId});
+  final String userId;
+  LandingPage({this.location, this.locationId, this.userId});
   @override
   _LandingPageState createState() => _LandingPageState();
 }
@@ -29,9 +30,9 @@ class _LandingPageState extends State<LandingPage> {
 
   _getAllSliders() async {
     var sliders = await _carouselService.getSliders();
-    print(sliders);
+    // print(sliders);
     var result = json.decode(sliders.body);
-    print(result);
+    // print(result);
     result['carousel'].forEach((data) {
       if (mounted) {
         setState(() {
@@ -43,14 +44,15 @@ class _LandingPageState extends State<LandingPage> {
 
   String featuredlist() {
     setState(() {
-      _title = widget.title;
+      _title = widget.location;
     });
     return _title;
   }
 
   @override
   Widget build(BuildContext context) {
-    String _cityname = featuredlist();
+    print('landing' + widget.userId);
+    // String _cityname = featuredlist();
     return Scaffold(
       appBar: MyAppBar(),
       // bottomNavigationBar: MyBottomNavigationBar(),
@@ -59,11 +61,12 @@ class _LandingPageState extends State<LandingPage> {
           shrinkWrap: true,
           children: [
             LocationPicker(
-              location: _title,
+              location: widget.location,
               locationId: widget.locationId,
+              userId: widget.userId,
             ),
             imageCarousel(items),
-            GridOne(widget.locationId),
+            GridOne(widget.locationId, widget.userId),
             // Center(
             //   child: Text(
             //     "Featured in $_cityname",

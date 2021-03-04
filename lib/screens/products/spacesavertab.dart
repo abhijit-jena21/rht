@@ -4,13 +4,16 @@ import '../../widgets/subcategorytab.dart';
 
 class SpacesaverTab extends StatefulWidget {
   final String locationId;
-  SpacesaverTab({this.locationId});
+  final String userId;
+  SpacesaverTab({this.locationId, this.userId});
   @override
   _SpacesaverTabState createState() => _SpacesaverTabState();
 }
 
 class _SpacesaverTabState extends State<SpacesaverTab>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
@@ -63,13 +66,13 @@ class _SpacesaverTabState extends State<SpacesaverTab>
             controller: _tabController,
             children: [
               TabBody(
-                  widget.locationId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
               TabBody(
-                  widget.locationId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
               TabBody(
-                  widget.locationId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
               TabBody(
-                  widget.locationId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
             ],

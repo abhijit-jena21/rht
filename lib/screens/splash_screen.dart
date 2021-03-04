@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import '../screens/location.dart';
 import 'package:rht/screens/starter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../my_navigator.dart';
@@ -10,6 +11,7 @@ String finalPhone;
 String finalId;
 String finalLocationId;
 String finalLocation;
+String userId;
 
 class UserId {
   String id;
@@ -34,9 +36,9 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Dio dio = new Dio();
-  String userId;
+  bool isExec;
 
-  void userCreate() async {
+  userCreate() async {
     final String pathUrl = "http://10.0.3.2:8080/api/usercreation";
     Response response = await dio.get(pathUrl);
     var responseData = response.data;
@@ -44,45 +46,55 @@ class _SplashScreenState extends State<SplashScreen> {
     var user = UserId.fromJson(json.decode(responseData));
     print("here" + user.id);
     userId = user.id;
+    print('splash' + userId);
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    sharedPreferences.setString('userId', userId);
+    await sharedPreferences.setString('userId', userId);
+
+    setState(() {
+      finalId = userId;
+    });
   }
 
   void initState() {
-    userCreate();
+    isExec = false;
     getUserId().whenComplete(() async {
-      // print("here2" + finalLocationId);
-      if (finalId == null && finalLocation == null)
-        Timer(
-            Duration(seconds: 3),
-            () => {
-                  MyNavigator.goToLocation(context),
-                });
-      else
-        Timer(
-            Duration(seconds: 3),
-            () => {
-                  // MyNavigator.goToHome(context),
-                  Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Starter(title: finalLocation, locationId: finalLocationId)),
-                (_) => false)
-                });
-    });
-
-    // getValidationData().whenComplete(() async {
-    //   // if(finalPhone == null)
-    //   //   Timer(Duration(seconds: 3), () => MyNavigator.goToSignup(context));
-    //   // else
-    //   Timer(
-    //       Duration(seconds: 3),
-    //       () => {
-    //             MyNavigator.goToLocation(context),
-    //           });
-    // });
+      if (finalId == null) await userCreate();
+      // Timer(Duration(seconds: 10), () {});
+      // else{
+      print('splash2' + finalId.toString());
+      setState(() {
+        getUserLocation().whenComplete(() async {
+          if (finalId != null && finalLocationId == null) {
+            Timer(
+                Duration(seconds: 3),
+                () => {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Location(userId: finalId)),
+                          (_) => false)
+                    });
+          } else if (finalId != null && finalLocationId != null) {
+            Timer(
+                Duration(seconds: 3),
+                () => {
+                      // MyNavigator.goToHome(context),
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Starter(
+                                  location: finalLocation,
+                                  locationId: finalLocationId,
+                                  userId: finalId)),
+                          (_) => false)
+                    });
+          }
+        });
+      });
+    }
+        // }
+        );
     super.initState();
   }
 
@@ -90,24 +102,27 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     var obtainedId = sharedPreferences.getString('userId');
-    var obtainedLocationId = sharedPreferences.getString('locationId');
-    var obtainedLocation = sharedPreferences.getString('location');
+    // var obtainedLocationId = sharedPreferences.getString('locationId');
+    // var obtainedLocation = sharedPreferences.getString('location');
 
     setState(() {
       finalId = obtainedId;
+      // finalLocationId = obtainedLocationId;
+      // finalLocation = obtainedLocation;
+    });
+  }
+
+  Future getUserLocation() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    var obtainedLocationId = sharedPreferences.getString('locationId');
+    var obtainedLocation = sharedPreferences.getString('location');
+    setState(() {
+      // finalId = obtainedId;
       finalLocationId = obtainedLocationId;
       finalLocation = obtainedLocation;
     });
   }
-
-  // Future getUserLocation() async {
-  //   final SharedPreferences sharedPreferences =
-  //       await SharedPreferences.getInstance();
-
-  //   setState(() {
-  //     finalLocation = obtainedLocation;
-  //   });
-  // }
 
   Future getValidationData() async {
     final SharedPreferences sharedPreferences =
@@ -120,6 +135,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // if (isExec == false) {
+    //   userCreate();
+    //   isExec = true;
+    // }
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,

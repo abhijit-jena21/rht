@@ -8,10 +8,11 @@ import '../screens/wishlist.dart';
 import '../screens/profile.dart';
 
 class Starter extends StatefulWidget {
-  final String title;
+  final String location;
   final String locationId;
+  final String userId;
   final int index;
-  Starter({this.title, this.locationId, this.index});
+  Starter({this.location, this.locationId, this.index, this.userId});
   @override
   _StarterState createState() => _StarterState();
 }
@@ -19,12 +20,12 @@ class Starter extends StatefulWidget {
 class _StarterState extends State<Starter> {
   PageController _pageController = PageController();
   int _currentIndex = 0;
-  String _title;
+  String _location;
   String _locationId;
   int _index;
 
   void initState() {
-    _title = widget.title;
+    _location = widget.location;
     _locationId = widget.locationId;
     _index = widget.index;
     super.initState();
@@ -43,9 +44,11 @@ class _StarterState extends State<Starter> {
 
   @override
   Widget build(BuildContext context) {
+    print("starter"+widget.userId);
+    // print();
     final List<Widget> _screens = [
-      LandingPage(title: _title, locationId: _locationId),
-      Products(index: _index, locationId: _locationId),
+      LandingPage(location: _location, locationId: _locationId, userId: widget.userId,),
+      Products(index: _index, locationId: _locationId, userId: widget.userId),
       Wishlist(),
       Profile(),
     ];
@@ -56,6 +59,14 @@ class _StarterState extends State<Starter> {
           onPageChanged: _onPageChanged,
           physics: NeverScrollableScrollPhysics(),
         ),
+        // body: Navigator(
+        //   onGenerateRoute: (screen) {
+        //     Widget page = LandingPage(title: _title, locationId: _locationId);
+        //     if (screen.name == 'products')
+        //       page = Products(index: _index, locationId: _locationId);
+        //     return MaterialPageRoute(builder: (_) => page);
+        //   },
+        // ),
         bottomNavigationBar: MyBottomNavigationBar(
           currentIndex: _currentIndex,
           onItemTapped: _onItemTapped,

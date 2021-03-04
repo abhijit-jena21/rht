@@ -4,13 +4,16 @@ import '../../widgets/tabbody.dart';
 
 class ApplianceTab extends StatefulWidget {
   final String locationId;
-  ApplianceTab({this.locationId});
+  final String userId;
+  ApplianceTab({this.locationId, this.userId});
   @override
   _ApplianceTabState createState() => _ApplianceTabState();
 }
 
 class _ApplianceTabState extends State<ApplianceTab>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
@@ -24,6 +27,7 @@ class _ApplianceTabState extends State<ApplianceTab>
   }
 
   Widget build(BuildContext context) {
+    print("appliance" + widget.userId);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -67,10 +71,26 @@ class _ApplianceTabState extends State<ApplianceTab>
           body: TabBarView(
             controller: _tabController,
             children: [
-              TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
-              TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
-              TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
-              TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+              TabBody(
+                  widget.locationId,
+                  widget.userId,
+                  "http://10.0.3.2:8080/api/productslist",
+                  "603cc4bfba5cf916fc193c79"),
+              TabBody(
+                  widget.locationId,
+                  widget.userId,
+                  "http://10.0.3.2:8080/api/productslist",
+                  "603cc4bfba5cf916fc193c79"),
+              TabBody(
+                  widget.locationId,
+                  widget.userId,
+                  "http://10.0.3.2:8080/api/productslist",
+                  "603cc4bfba5cf916fc193c79"),
+              TabBody(
+                  widget.locationId,
+                  widget.userId,
+                  "http://10.0.3.2:8080/api/productslist",
+                  "603cc4bfba5cf916fc193c79"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
             ],

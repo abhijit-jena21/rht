@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rht/screens/starter.dart';
 
+import '../location.dart';
+
 class LocationPicker extends StatefulWidget {
   final String locationId;
   final String location;
-  LocationPicker({this.location, this.locationId});
+  final String userId;
+  LocationPicker({this.location, this.locationId, this.userId});
   @override
   _LocationPickerState createState() => _LocationPickerState();
 }
@@ -13,7 +16,10 @@ class _LocationPickerState extends State<LocationPicker> {
   String _location;
   @override
   void initState() {
+    // setState(() {
     _location = widget.location;
+    // });
+
     super.initState();
   }
 
@@ -34,8 +40,12 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   void _onButtonPressed() {
-
-    Navigator.pushNamed(context, "/location");
+    // Navigator.pushNamed(context, "/location");
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Location(userId: widget.userId)),
+        (_) => false);
     // showModalBottomSheet(
     //     context: context,
     //     builder: (context) {
@@ -81,4 +91,4 @@ class _LocationPickerState extends State<LocationPicker> {
 //       );
 //     });
 //   }
- }
+}

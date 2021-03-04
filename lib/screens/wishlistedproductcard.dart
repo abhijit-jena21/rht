@@ -1,17 +1,10 @@
 import "package:flutter/material.dart";
-// import 'package:http/http.dart';
-import 'dart:async';
-import 'package:rht/screens/splash_screen.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../screens/productdetail.dart';
-import 'package:dio/dio.dart';
 import "../my_navigator.dart";
 
 MyNavigator myNavigator;
 
-class ProductCard extends StatefulWidget {
-  final String userId;
-  final String productId;
+class WishlistedProductCard extends StatefulWidget {
   final String name;
   final List<String> img;
   final String details;
@@ -20,57 +13,20 @@ class ProductCard extends StatefulWidget {
   final int duration;
   // String imgPath,
   final List<String> items;
-  ProductCard(this.userId, this.productId, this.name, this.img, this.details,
-      this.price, this.rent, this.duration, this.items);
+  WishlistedProductCard(this.name, this.img, this.details, this.price, this.rent,
+      this.duration, this.items);
   @override
-  _ProductCardState createState() => _ProductCardState();
+  _WishlistedProductCardState createState() => _WishlistedProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard> {
-  bool isFavourite;
-  bool isFav = false;
-  String response;
-  Dio dio = new Dio();
+class _WishlistedProductCardState extends State<WishlistedProductCard> {
 
-  postToWishlist() async {
-    final String pathUrl = "http://10.0.3.2:8080/api/wishlist";
-    try {
-      print('here22');
-      print(widget.userId);
-      print(finalId);
-      print(widget.productId);
-      return await dio.post(pathUrl,
-          data: {
-            "userid": finalId,
-            "productid": widget.productId,
-            "status": !isFav,
-          },
-          options: Options(headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }));
-    } on DioError catch (e) {
-      print('here33');
-      Fluttertoast.showToast(
-          msg: e.response.data['msg'],
-          toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 15.0);
-    }
-    // setState(() {
-    //   isFavourite = isFavourite == false ? true : false;
-    // });
+  bool isFavourite = false;
+  wishlist() {
+    setState(() {
+      isFavourite = isFavourite == false ? true : false;
+    });
   }
-
-  // Future<bool>
-  Future<bool> responseFromWishlist() async {
-    Response response = await postToWishlist();
-    print(response.data);
-    var responseData = response.data;
-    // boolResponse = responseData;
-    return responseData;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -126,18 +82,15 @@ class _ProductCardState extends State<ProductCard> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50)),
                               color: Colors.grey[200],
-                              onPressed: () async {
-                                isFavourite = await responseFromWishlist();
-                                print("sss" + isFavourite.toString());
-                                setState(() {
-                                  isFav = isFavourite;
-                                });
+                              onPressed: () {
+                                wishlist();
                               },
-                              child: Icon(
-                                isFav ? Icons.favorite : Icons.favorite_border,
-                                color: Color(0xFFEF7532),
-                                size: 18,
-                              ),
+                              child: 
+                                  Icon(
+                                        isFavourite == true ? Icons.favorite : Icons.favorite_border,
+                                        color: Color(0xFFEF7532),
+                                        size: 18,
+                                      ),
                             ),
                           ),
                         ),
@@ -161,6 +114,7 @@ class _ProductCardState extends State<ProductCard> {
                       ],
                     ),
                   ),
+
                   SizedBox(height: 7.0),
                   Container(
                     alignment: Alignment.centerLeft,
@@ -187,3 +141,4 @@ class _ProductCardState extends State<ProductCard> {
                 ]))));
   }
 }
+

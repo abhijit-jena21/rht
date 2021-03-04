@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:rht/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:rht/screens/landingpage/landingpage.dart';
 // import 'package:rht/screens/landingpage/locationpicker.dart';
 import 'package:rht/screens/starter.dart';
 
 class Location extends StatelessWidget {
+  final String userId;
+  Location({this.userId});
   @override
   Widget build(BuildContext context) {
-    Container myItems(AssetImage assetImage, String title, String locationId) {
+    Container myItems(
+        AssetImage assetImage, String location, String locationId) {
       Image image = Image(
         image: assetImage,
         // width: 50.0,
@@ -28,7 +32,7 @@ class Location extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  title,
+                  location,
                   style: Theme.of(context).textTheme.headline4,
                 )
               ],
@@ -37,13 +41,16 @@ class Location extends StatelessWidget {
           onTap: () async {
             final SharedPreferences sharedPreferences =
                 await SharedPreferences.getInstance();
-                sharedPreferences.setString('locationId', locationId);
-                sharedPreferences.setString('location', title);
+            sharedPreferences.setString('locationId', locationId);
+            sharedPreferences.setString('location', location);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        Starter(title: title, locationId: locationId)),
+                    builder: (context) => Starter(
+                          location: location,
+                          locationId: locationId,
+                          userId: userId,
+                        )),
                 (_) => false);
           },
         ),

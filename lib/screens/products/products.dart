@@ -12,7 +12,9 @@ class Products extends StatefulWidget {
   final TabController tabController;
   int index = 0;
   String locationId;
-  Products({Key key, this.tabController, this.index, this.locationId}) : super(key: key);
+  String userId;
+  Products({Key key, this.tabController, this.index, this.locationId, this.userId})
+      : super(key: key);
   Products.getC({Key key, @required this.tabController, @required this.index})
       : super(key: key);
   @override
@@ -37,9 +39,10 @@ class _ProductsState extends State<Products>
   }
 
   // print(widget.index)
-
+  
   @override
   Widget build(BuildContext context) {
+    print("products"+widget.userId);
     return DefaultTabController(
       initialIndex: widget.index == null ? 0 : widget.index,
       length: 6,
@@ -81,12 +84,24 @@ class _ProductsState extends State<Products>
         ),
         body: TabBarView(
           children: [
-            ApplianceTab(locationId: widget.locationId,),
-            ElectronicTab(locationId: widget.locationId,),
-            FurnitureTab(locationId: widget.locationId,),
-            FitnessTab(locationId: widget.locationId,),
-            SpacesaverTab(locationId: widget.locationId,),
-            KitchenTab(locationId: widget.locationId,),
+            ApplianceTab(
+              locationId: widget.locationId, userId: widget.userId
+            ),
+            ElectronicTab(
+              locationId: widget.locationId, userId: widget.userId
+            ),
+            FurnitureTab(
+              locationId: widget.locationId, userId: widget.userId
+            ),
+            FitnessTab(
+              locationId: widget.locationId, userId: widget.userId
+            ),
+            SpacesaverTab(
+              locationId: widget.locationId, userId: widget.userId
+            ),
+            KitchenTab(
+              locationId: widget.locationId, userId: widget.userId
+            ),
           ],
           // controller: widget.tabController,
         ),
