@@ -16,11 +16,11 @@ class ProductList extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 10.0,
+        crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
-        childAspectRatio: 1.1,
+        childAspectRatio: 1,
       ),
-      padding: EdgeInsets.all(2.0),
+      padding: EdgeInsets.all(5.0),
       itemCount: snapshot.length,
       itemBuilder: (BuildContext context, int index) {
         return ProductCard(

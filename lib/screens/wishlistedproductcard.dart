@@ -1,10 +1,20 @@
+import 'dart:async';
+
 import "package:flutter/material.dart";
+import "package:dio/dio.dart";
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rht/screens/wishlist.dart';
 import '../screens/productdetail.dart';
 import "../my_navigator.dart";
 
 MyNavigator myNavigator;
 
 class WishlistedProductCard extends StatefulWidget {
+  final String userId;
+  void Function(int) onButtonTapped;
+  final int index;
+  final Function(int) notifyParent;
+  final String productId;
   final String name;
   final List<String> img;
   final String details;
@@ -13,20 +23,73 @@ class WishlistedProductCard extends StatefulWidget {
   final int duration;
   // String imgPath,
   final List<String> items;
-  WishlistedProductCard(this.name, this.img, this.details, this.price, this.rent,
-      this.duration, this.items);
+  WishlistedProductCard(
+      this.userId,
+      this.onButtonTapped,
+      this.index,
+      this.notifyParent,
+      this.productId,
+      this.name,
+      this.img,
+      this.details,
+      this.price,
+      this.rent,
+      this.duration,
+      this.items);
   @override
   _WishlistedProductCardState createState() => _WishlistedProductCardState();
 }
 
 class _WishlistedProductCardState extends State<WishlistedProductCard> {
-
   bool isFavourite = false;
   wishlist() {
     setState(() {
       isFavourite = isFavourite == false ? true : false;
     });
   }
+
+  bool isFav = false;
+  String response;
+  Dio dio = new Dio();
+
+  postToWishlist() async {
+    final String pathUrl = "http://10.0.3.2:8080/api/wishlist";
+    try {
+      print('here22');
+      print(widget.userId);
+      // print(finalId);
+      print(widget.productId);
+      return await dio.post(pathUrl,
+          data: {
+            "userid": widget.userId,
+            "productid": widget.productId,
+            "status": isFav,
+          },
+          options: Options(headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }));
+    } on DioError catch (e) {
+      print('here33');
+      Fluttertoast.showToast(
+          msg: e.response.data['msg'],
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+    // setState(() {
+    //   isFavourite = isFavourite == false ? true : false;
+    // });
+  }
+
+  Future<bool> responseFromWishlist() async {
+    Response response = await postToWishlist();
+    print(response.data);
+    var responseData = response.data;
+    // boolResponse = responseData;
+    return responseData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -82,15 +145,34 @@ class _WishlistedProductCardState extends State<WishlistedProductCard> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50)),
                               color: Colors.grey[200],
-                              onPressed: () {
-                                wishlist();
+                              onPressed: () async {
+                                isFavourite = await responseFromWishlist()
+                                    .whenComplete(() {
+                                  widget.notifyParent(widget.index);
+                                });
+                                // widget.notifyParent();
+
+                                // setState(() {
+                                // Navigator.pop(context);
+                                // Timer(Duration(seconds: 6),()=>CircularProgressIndicator());
+                                // Timer(Duration(seconds: 6),()=>widget.onButtonTapped(2));
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (BuildContext context) =>this));
+
+                                //             Navigator.push(context,MaterialPageRoute(
+                                // builder: (context) => Wishlist(
+                                //       pathUrl: "http://10.0.3.2:8080/api/wishlistproducts",
+                                //       userId: widget.userId,
+                                //     )));
+                                // });
                               },
-                              child: 
-                                  Icon(
-                                        isFavourite == true ? Icons.favorite : Icons.favorite_border,
-                                        color: Color(0xFFEF7532),
-                                        size: 18,
-                                      ),
+                              child: Icon(
+                                Icons.delete,
+                                color: Color(0xFF999999),
+                                size: 18,
+                              ),
                             ),
                           ),
                         ),
@@ -114,7 +196,6 @@ class _WishlistedProductCardState extends State<WishlistedProductCard> {
                       ],
                     ),
                   ),
-
                   SizedBox(height: 7.0),
                   Container(
                     alignment: Alignment.centerLeft,
@@ -141,4 +222,3 @@ class _WishlistedProductCardState extends State<WishlistedProductCard> {
                 ]))));
   }
 }
-

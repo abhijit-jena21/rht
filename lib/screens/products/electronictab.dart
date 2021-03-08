@@ -11,9 +11,11 @@ class ElectronicTab extends StatefulWidget {
 }
 
 class _ElectronicTabState extends State<ElectronicTab>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+    with TickerProviderStateMixin 
+    // AutomaticKeepAliveClientMixin 
+    {
+  // @override
+  // bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
@@ -67,19 +69,19 @@ class _ElectronicTabState extends State<ElectronicTab>
               TabBody(
                   widget.locationId, widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc66274b118cbd7c8c4e7"),
               TabBody(
                   widget.locationId, widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc69a74b118cbd7c8c4e8"),
               TabBody(
                   widget.locationId, widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc6ad74b118cbd7c8c4e9"),
               TabBody(
                   widget.locationId, widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc6ba74b118cbd7c8c4ea"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
             ],

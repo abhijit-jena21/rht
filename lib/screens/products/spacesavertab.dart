@@ -11,9 +11,11 @@ class SpacesaverTab extends StatefulWidget {
 }
 
 class _SpacesaverTabState extends State<SpacesaverTab>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+    with TickerProviderStateMixin
+    // , AutomaticKeepAliveClientMixin
+    {
+  // @override
+  // bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
@@ -66,13 +68,13 @@ class _SpacesaverTabState extends State<SpacesaverTab>
             controller: _tabController,
             children: [
               TabBody(
-                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc73d74b118cbd7c8c4ed"),
               TabBody(
-                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc71474b118cbd7c8c4ec"),
               TabBody(
-                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc6f874b118cbd7c8c4eb"),
               TabBody(
-                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc75374b118cbd7c8c4ee"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
             ],

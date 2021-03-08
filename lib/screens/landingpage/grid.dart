@@ -6,7 +6,8 @@ import '../products/products.dart';
 class GridOne extends StatefulWidget {
   final String locationId;
   final String userId;
-  GridOne(this.locationId, this.userId);
+  final void Function(int, int, String, TabController) onButtonTapped;
+  GridOne(this.locationId, this.userId, this.onButtonTapped);
   // final productsKey = new GlobalKey<_ProductsState>();
   @override
   _GridOneState createState() => _GridOneState();
@@ -19,16 +20,18 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
   Products products;
   TabController tabController;
   @override
-  void initState() {
-    super.initState();
-    tabController = new TabController(vsync: this, length: 6);
-  }
+  // void initState() {
+  //   super.initState();
+  //   tabController = new TabController(vsync: this, length: 6);
+  // }
 
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   tabController.dispose();
+  //   super.dispose();
+  // }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +53,15 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
                 tabIndex = ind;
               });
               // Navigator.pushNamed(context, 'products');
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Products(
-                            index: tabIndex,
-                            locationId: widget.locationId,
-                            userId: widget.userId,
-                          )));
+              widget.onButtonTapped(1, tabIndex, widget.locationId, tabController);
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => Products(
+              //               index: tabIndex,
+              //               locationId: widget.locationId,
+              //               userId: widget.userId,
+              //             )));
               print(":" + tabIndex.toString());
               print(ind);
               // // Navigator.push(

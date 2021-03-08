@@ -125,52 +125,60 @@ class _ProductDetailState extends State<ProductDetail> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+              // children: [
                 Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     alignment: Alignment.centerLeft,
                     child: Text('${widget.name}',
                         overflow: TextOverflow.clip,
                         style: Theme.of(context).textTheme.headline2)),
-                Container(
-                  // height: 50,
-                  // width: double.infinity/2,
-                  alignment: Alignment.centerRight,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  padding: EdgeInsets.fromLTRB(5, 10, 20, 10),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('₹ $calculatedRent',
-                              style: Theme.of(context).textTheme.headline1),
-                          Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      // height: 50,
+                      // width: double.infinity/2,
+                      alignment: Alignment.centerRight,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      padding: EdgeInsets.fromLTRB(5, 10, 20, 10),
+                      child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('/month',
-                                  style: Theme.of(context).textTheme.bodyText1),
-                              SizedBox(
-                                height: 7,
-                              )
+                              Container(
+                                padding: EdgeInsets.fromLTRB(20,0,0,0),
+                                child: Text('₹ $calculatedRent',
+                                    style: Theme.of(context).textTheme.headline1),
+                              ),
+                              Column(
+                                children: [
+                                  Text('/month',
+                                      style: Theme.of(context).textTheme.bodyText1),
+                                  SizedBox(
+                                    height: 7,
+                                  )
+                                ],
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-                      Text('Deposit Amount:\n ₹ ${widget.price}',
-                          textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.headline3.copyWith(fontWeight: FontWeight.bold,fontSize: 12)),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      padding: EdgeInsets.fromLTRB(5, 10, 20, 10),
+                      child: Text('Deposit Amount:\n ₹ ${widget.price}',
+                                textAlign: TextAlign.end,
+                                style: Theme.of(context).textTheme.headline3.copyWith(fontWeight: FontWeight.bold,fontSize: 12)),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              // ],
+            // ),m
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 10),

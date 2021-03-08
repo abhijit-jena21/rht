@@ -11,14 +11,16 @@ class FitnessTab extends StatefulWidget {
 }
 
 class _FitnessTabState extends State<FitnessTab>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+    with TickerProviderStateMixin
+    // , AutomaticKeepAliveClientMixin
+    {
+  // @override
+  // bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 6);
+    _tabController = new TabController(vsync: this, length: 4);
     _tabController.addListener(_handleTabSelection);
   }
   void _handleTabSelection(){
@@ -29,7 +31,7 @@ class _FitnessTabState extends State<FitnessTab>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 6,
+      length: 4,
       child: Scaffold(appBar: 
       AppBar(
         automaticallyImplyLeading: false,
@@ -47,22 +49,22 @@ class _FitnessTabState extends State<FitnessTab>
           unselectedLabelColor: Colors.grey[700],
           labelColor: Theme.of(context).accentColor,
           tabs: [
-            SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/dumb%20bell.png?raw=true", "Dumbbells"),
+            SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/dumb%20bell.png?raw=true", "Gym\nEssentials"),
             SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/treadmill.png?raw=true", "Treadmills"),
-            SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/bar.png?raw=true", "Bars"),
-            SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/ab%20exerciser.png?raw=true", "Ab Exerciser"),
+            // SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/bar.png?raw=true", "Bars"),
+            // SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/ab%20exerciser.png?raw=true", "Ab Exerciser"),
             SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/exercise%20bike.png?raw=true", "Exercise Bikes"),
             SubCategoryTab("https://www.github.com/abhijit-jena21/image-repo/blob/main/fitness%20bench.png?raw=true", "Fitness Bench"),
         ],),),
         body: TabBarView(
             controller: _tabController,
             children: [
-              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
-              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
-              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
-              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc812bafedb7aabe4c787"),
+              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc7c9bafedb7aabe4c785"),
+              // TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+              // TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
               TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc77dbafedb7aabe4c784"),
-              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+              TabBody(widget.locationId,widget.userId,"http://10.0.3.2:8080/api/productslist","603cc7f2bafedb7aabe4c786"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
             ],

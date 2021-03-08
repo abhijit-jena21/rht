@@ -11,9 +11,11 @@ class ApplianceTab extends StatefulWidget {
 }
 
 class _ApplianceTabState extends State<ApplianceTab>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+    with TickerProviderStateMixin
+    // , AutomaticKeepAliveClientMixin
+    {
+  // @override
+  // bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
@@ -80,17 +82,17 @@ class _ApplianceTabState extends State<ApplianceTab>
                   widget.locationId,
                   widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc513ba5cf916fc193c7a"),
               TabBody(
                   widget.locationId,
                   widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc56aba5cf916fc193c7c"),
               TabBody(
                   widget.locationId,
                   widget.userId,
                   "http://10.0.3.2:8080/api/productslist",
-                  "603cc4bfba5cf916fc193c79"),
+                  "603cc5b7ba5cf916fc193c7d"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),
             ],

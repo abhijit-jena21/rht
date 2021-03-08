@@ -11,9 +11,11 @@ class KitchenTab extends StatefulWidget {
 }
 
 class _KitchenTabState extends State<KitchenTab>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+    with TickerProviderStateMixin
+    // ,AutomaticKeepAliveClientMixin
+    {
+  // @override
+  // bool get wantKeepAlive => true;
   TabController _tabController;
   @override
   void initState() {
@@ -62,11 +64,11 @@ class _KitchenTabState extends State<KitchenTab>
             controller: _tabController,
             children: [
               TabBody(
-                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc862bafedb7aabe4c78a"),
               TabBody(
-                  widget.locationId, widget.userId,"http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId, widget.userId,"http://10.0.3.2:8080/api/productslist","603cc891bafedb7aabe4c78c"),
               TabBody(
-                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc4bfba5cf916fc193c79"),
+                  widget.locationId,widget.userId, "http://10.0.3.2:8080/api/productslist","603cc87abafedb7aabe4c78b"),
               // TabBody(
               //     widget.locationId, "http://10.0.3.2:8080/api/productslist"),
               // TabBody(widget.locationId,"http://10.0.3.2:8080/api/productslist"),

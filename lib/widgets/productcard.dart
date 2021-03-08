@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
+import 'package:rht/models/product.dart';
 // import 'package:http/http.dart';
 import 'dart:async';
 import 'package:rht/screens/splash_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rht/screens/wishlistedproductcard.dart';
 import '../screens/productdetail.dart';
 import 'package:dio/dio.dart';
 import "../my_navigator.dart";
@@ -62,7 +64,6 @@ class _ProductCardState extends State<ProductCard> {
     // });
   }
 
-  // Future<bool>
   Future<bool> responseFromWishlist() async {
     Response response = await postToWishlist();
     print(response.data);
@@ -71,8 +72,69 @@ class _ProductCardState extends State<ProductCard> {
     return responseData;
   }
 
+  userIdentity(String userid) async {
+    // print(locationid);
+    final String pathUrl = "http://10.0.3.2:8080/api/wishlistproducts";
+    try {
+      print('here22');
+      print(userid);
+      return await dio.post(pathUrl,
+          data: {
+            "id": userid,
+            // "sub": subcategoryid,
+          },
+          options: Options(headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }));
+    } on DioError catch (e) {
+      print('here33');
+      Fluttertoast.showToast(
+          msg: e.response.data['msg'],
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+    print("here");
+  }
+
+  Future<List<Product>> _getWishlistedProducts() async {
+    Response response = await userIdentity(widget.userId);
+    print(response.data);
+    var responseData = response.data;
+    // print(data);
+    print('some');
+    if (responseData != null)
+      return (responseData as List).map((x) => Product.fromJson(x)).toList();
+  }
+
+  List<Product> wishlistedProducts;
+  void initState() {
+    _getWishlistedProducts().then((result) {
+      if (this.mounted) {
+        setState(() {
+          wishlistedProducts = result;
+        });
+      }
+    });
+    super.initState();
+  }
+
+  // foobar() async {
+  //   await _getWishlistedProducts();
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // print("hereiam" + wishlistedProducts[0].sId);
+    if (wishlistedProducts != null) {
+      for (var index = 0; index < wishlistedProducts.length; index++) {
+        if (widget.productId == wishlistedProducts[index].sId)
+          isFav = true;
+        else
+          isFav = false;
+      }
+    }
     return Padding(
         padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
         child: InkWell(
@@ -104,17 +166,23 @@ class _ProductCardState extends State<ProductCard> {
                     height: 110,
                     // width: 110,
                     child: Stack(
-                      fit: StackFit.expand,
+                      alignment: AlignmentDirectional.center,
+                      // overflow: Overflow.clip,
+                      fit: StackFit.loose,
                       children: [
                         // Hero(
                         //     tag: imgPath,
                         Container(
+                          // alignment: Alignment.center,
+                          constraints: BoxConstraints.loose(Size.fromHeight(100)),
                             height: 110,
                             width: double.infinity,
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage(widget.img[0]),
-                                    fit: BoxFit.contain))),
+                                    fit: BoxFit.contain))
+                                    ),
                         Positioned(
                           top: 5,
                           right: 10,
@@ -128,6 +196,9 @@ class _ProductCardState extends State<ProductCard> {
                               color: Colors.grey[200],
                               onPressed: () async {
                                 isFavourite = await responseFromWishlist();
+                                wishlistedProducts =
+                                    await _getWishlistedProducts();
+
                                 print("sss" + isFavourite.toString());
                                 setState(() {
                                   isFav = isFavourite;
@@ -165,7 +236,7 @@ class _ProductCardState extends State<ProductCard> {
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 10),
-                    height: 20,
+                    height: 40,
                     child: Text(widget.name,
                         textAlign: TextAlign.left,
                         style: TextStyle(
