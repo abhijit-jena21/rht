@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import '../screens/signup.dart';
 import '../screens/otp/otp_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/constants.dart';
 import '../my_navigator.dart';
@@ -20,6 +19,8 @@ class Res {
 }
 
 class LoginScreen extends StatefulWidget {
+  final String _route;
+  LoginScreen(this._route);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -116,19 +117,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
           if (res.result == 'Welcome Buddy,Enter Otp!') {
             myNavigator = MyNavigator(_phno, _from);
-            myNavigator.goToOtp(context);
+            // myNavigator.goToOtp(context);
             // final SharedPreferences sharedPreferences =
             //     await SharedPreferences.getInstance();
             // sharedPreferences.setString('phone', _phno);
-            
-            OtpScreen(_phno, _from);
+
+            Navigator.push(context,
+        MaterialPageRoute(builder: (context) =>OtpScreen(_phno, _from, widget._route)));
           } else if (res.result == 'Not Registered!') {
-            Fluttertoast.showToast(
-                msg: 'User doesn\'t exist',
-                toastLength: Toast.LENGTH_SHORT,
-                backgroundColor: Color(0xFF666666),
-                textColor: Color(0xFFFFFFFF),
-                fontSize: 15.0);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SignupScreen(_phno, widget._route)));
             // MyNavigator.goToOtp(context);
           }
         },
@@ -164,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignupBtn() {
     return GestureDetector(
-      onTap: () => MyNavigator.goToSignup(context),
+      onTap: () => myNavigator.goToSignup(context),
       child: RichText(
         text: TextSpan(
           children: [
@@ -194,12 +192,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSkipBtn() {
     return GestureDetector(
-      onTap: () => MyNavigator.goToHome(context),
+      onTap: () => Navigator.pop(context),
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
-              text: 'Skip for now',
+              text: 'Back',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 color: Color(0xFFFF4E00),
@@ -250,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 30.0,
                           ),
                           Text(
-                            'Welcome back! \nGood to see you. ',
+                            'Hello.\nWelcome to RHT.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.brown,

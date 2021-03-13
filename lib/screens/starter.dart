@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../screens/splash_screen.dart';
 import '../widgets/navigationbar.dart';
 // import '../screens/departments.dart';
 import '../screens/products/products.dart';
 import './landingpage/landingpage.dart';
 import '../screens/wishlist.dart';
-import '../screens/profile.dart';
+import 'myprofile/drawer_bloc.dart';
+import 'myprofile/drawer_layout.dart';
 
 class Starter extends StatefulWidget {
   final String location;
@@ -25,7 +27,7 @@ class _StarterState extends State<Starter> {
   String _location;
   String _locationId;
   int _index;
-  TabController _tabController;
+  // TabController _tabController;
 
   void initState() {
     _location = widget.location;
@@ -45,30 +47,20 @@ class _StarterState extends State<Starter> {
     _pageController.jumpToPage(selectedIndex);
   }
 
-  void onButtonTapped(int pageindex, int index, String locationId,
-      TabController tabController) {
+  void onButtonTapped(int pageindex, int index, String locationId) {
     setState(() {
       _index = index;
       _locationId = locationId;
-      _tabController = tabController;
+      // _tabController = tabController;
     });
     print("re" + _index.toString());
     _pageController.jumpToPage(pageindex);
-    _productKey.currentState.tabController.animateTo(index);
-  }
-
-  void onButtonTapped2(int pageindex) {
-    // setState(() {
-    //   _index = index;
-    //   _locationId = locationId;
-    // });
-    // print("re"+_index.toString());
-    _pageController.jumpToPage(pageindex);
+    // _productKey.currentState.tabController.animateTo(_index);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("starter" + widget.userId);
+    // print("starter" + widget.userId);
     // print();
     final List<Widget> _screens = [
       LandingPage(
@@ -82,14 +74,17 @@ class _StarterState extends State<Starter> {
         index: _index,
         locationId: _locationId,
         userId: widget.userId,
-        tabController: _tabController,
+        // tabController: _tabController,
       ),
       Wishlist(
-        pathUrl: "http://10.0.3.2:8080/api/wishlistproducts",
+        pathUrl: "$serverLink/api/wishlistproducts",
         userId: widget.userId,
-        onButtonTapped: onButtonTapped2,
+        // onButtonTapped: onButtonTapped2,
       ),
-      Profile(),
+      BlocProvider<DrawerBloc>(
+        create: (context) => DrawerBloc(),
+        child: DrawerLayout(),
+      ),
     ];
     return Scaffold(
         body: PageView(

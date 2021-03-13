@@ -6,7 +6,7 @@ import '../products/products.dart';
 class GridOne extends StatefulWidget {
   final String locationId;
   final String userId;
-  final void Function(int, int, String, TabController) onButtonTapped;
+  final void Function(int, int, String) onButtonTapped;
   GridOne(this.locationId, this.userId, this.onButtonTapped);
   // final productsKey = new GlobalKey<_ProductsState>();
   @override
@@ -18,7 +18,7 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
   // String locationId;
   // MyNavigator myNavigator;
   Products products;
-  TabController tabController;
+  // TabController tabController;
   @override
   // void initState() {
   //   super.initState();
@@ -53,7 +53,7 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
                 tabIndex = ind;
               });
               // Navigator.pushNamed(context, 'products');
-              widget.onButtonTapped(1, tabIndex, widget.locationId, tabController);
+              widget.onButtonTapped(1, tabIndex, widget.locationId);
               // Navigator.push(
               //     context,
               //     MaterialPageRoute(

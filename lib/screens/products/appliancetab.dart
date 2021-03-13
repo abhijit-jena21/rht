@@ -29,7 +29,7 @@ class _ApplianceTabState extends State<ApplianceTab>
   }
 
   Widget build(BuildContext context) {
-    print("appliance" + widget.userId);
+    // print("appliance" + widget.userId);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -61,12 +61,6 @@ class _ApplianceTabState extends State<ApplianceTab>
                 SubCategoryTab(
                     "https://www.github.com/abhijit-jena21/image-repo/blob/main/ac.png?raw=true",
                     "ACs"),
-                // SubCategoryTab(
-                //     "https://www.github.com/abhijit-jena21/image-repo/blob/main/toaster.png?raw=true",
-                //     "Toasters"),
-                // SubCategoryTab(
-                //     "https://www.github.com/abhijit-jena21/image-repo/blob/main/fan.png?raw=true",
-                //     "Fans"),
               ],
             ),
           ),

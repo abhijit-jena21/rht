@@ -7,7 +7,8 @@ import './otp_body.dart';
 class OtpScreen extends StatelessWidget {
   final String _number;
   final String _from;
-  OtpScreen(this._number, this._from);
+  final String _route;
+  OtpScreen(this._number, this._from, this._route);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -21,7 +22,7 @@ class OtpScreen extends StatelessWidget {
         //   style: kLabelStyle,),
         // ),
       ),
-      body: Body(_number,_from),
+      body: Body(_number, _from, _route),
     );
   }
 }

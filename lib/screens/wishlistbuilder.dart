@@ -5,7 +5,7 @@ import '../screens/wishlistedproductcard.dart';
 class WishlistBuilder extends StatefulWidget {
   final List<Product> snapshot;
   final String userId;
-  void Function(int) onButtonTapped;
+  final void Function(int) onButtonTapped;
   // final Function refresh;
   WishlistBuilder(
       this.snapshot, this.userId, this.onButtonTapped);
@@ -27,7 +27,7 @@ class _WishlistBuilderState extends State<WishlistBuilder> {
         crossAxisCount: 2,
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 5.0,
-        childAspectRatio: 1.1,
+        childAspectRatio: 1.0,
       ),
       padding: EdgeInsets.all(2.0),
       itemCount: widget.snapshot.length,
@@ -50,27 +50,29 @@ class _WishlistBuilderState extends State<WishlistBuilder> {
           widget.snapshot[index].rent,
           widget.snapshot[index].duration,
           widget.snapshot[index].itemsid,
+          widget.snapshot[index].locationid
         );
       },
     );
     else if(widget.snapshot.length==0)
     return Container(
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              "././assets/images/stock.png",
-                              height: 200,
+      child: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "././assets/images/empty.png",
+                  height: 200,
                               // scale: 0.5,
-                            ),
-                            Text(
-                              "Your wishlist is empty",
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                          ],
-                        )),
-                      );
+                ),
+                Text(
+                  "Your wishlist is empty",
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+          ],
+        )
+      ),
+    );
   }
   
 }

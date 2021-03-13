@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:rht/utils/size_config.dart';
+import '../utils/size_config.dart';
 
 typedef TapCallback = void Function(int selectedIndex);
 

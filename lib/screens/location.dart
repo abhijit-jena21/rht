@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:rht/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:rht/screens/landingpage/landingpage.dart';
-// import 'package:rht/screens/landingpage/locationpicker.dart';
-import 'package:rht/screens/starter.dart';
+
+import '../screens/starter.dart';
+import '../screens/splash_screen.dart';
+import 'admin/adminstarter.dart';
 
 class Location extends StatelessWidget {
   final String userId;
@@ -39,63 +39,35 @@ class Location extends StatelessWidget {
             ),
           ),
           onTap: () async {
+            finalAdminLocation = location;
+            finalAdminLocationId = locationId;
             final SharedPreferences sharedPreferences =
                 await SharedPreferences.getInstance();
             sharedPreferences.setString('locationId', locationId);
             sharedPreferences.setString('location', location);
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Starter(
-                          location: location,
-                          locationId: locationId,
-                          userId: userId,
-                        )),
-                (_) => false);
+            sharedPreferences.setString('adminLocationId', locationId);
+            sharedPreferences.setString('adminLocation', location);
+            if (admin == false)
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Starter(
+                            location: location,
+                            locationId: locationId,
+                            userId: userId,
+                          )),
+                  (_) => false);
+            else
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminStarter(
+                            adminLocation: finalAdminLocation,
+                            adminLocationId: finalAdminLocationId,
+                          )),
+                  (_) => false);
           },
         ),
-        // color: Colors.white,
-        // elevation: 2.0,
-        // shadowColor: Theme.of(context).primaryColor,
-        // borderRadius: BorderRadius.circular(15.0),
-        // child: InkWell(
-        //   onTap: () {
-        //     // setState(() {
-        //     //   tabIndex = ind;
-        //     // });
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         // builder: (context) => Products(
-        //         //           index: tabIndex,
-        //         //         )
-        //                 ));
-        //     // print(":" + tabIndex.toString());
-        //     // print(ind);
-
-        //   },
-        //   child: Center(
-        //     child: Padding(
-        //       padding: EdgeInsets.all(8.0),
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: [
-        //           Column(
-        //             mainAxisAlignment: MainAxisAlignment.center,
-        //             children: [
-        //               image,
-        //               Container(
-        //                 padding:
-        //                     EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-        //                 child: Text(title,
-        //                     style: Theme.of(context).textTheme.bodyText1),
-        //               )
-        //             ],
-        //           )
-        //         ],
-        //       ),
-        //     ),
-        //   ),
       );
     }
 

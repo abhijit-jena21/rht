@@ -11,7 +11,7 @@ class LandingPage extends StatefulWidget {
   final String location;
   final String locationId;
   final String userId;
-  final void Function(int, int, String, TabController) onButtonTapped;
+  final void Function(int, int, String) onButtonTapped;
   // final TabController tabController;
   LandingPage(
       {this.location, this.locationId, this.userId, this.onButtonTapped,});
@@ -23,7 +23,6 @@ class _LandingPageState extends State<LandingPage> {
   CarouselService _carouselService = CarouselService();
 
   var items = [];
-  String _title;
   // String _cityname;
   void initState() {
     super.initState();
@@ -45,12 +44,6 @@ class _LandingPageState extends State<LandingPage> {
     });
   }
 
-  String featuredlist() {
-    setState(() {
-      _title = widget.location;
-    });
-    return _title;
-  }
 
   @override
   Widget build(BuildContext context) {

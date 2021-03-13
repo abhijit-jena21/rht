@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../my_navigator.dart';
 import '../utils/constants.dart';
 import '../services/authservice.dart';
+import 'otp/otp_screen.dart';
 // import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class Res {
@@ -20,6 +21,9 @@ class Res {
 }
 
 class SignupScreen extends StatefulWidget {
+  final String phone;
+  final String _route;
+  SignupScreen(this.phone, this._route);
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -190,6 +194,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         SizedBox(height: 10.0),
         TextFormField(
+          initialValue: widget.phone,
           keyboardType: TextInputType.phone,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (String value) {
@@ -232,8 +237,12 @@ class _SignupScreenState extends State<SignupScreen> {
           print(res.result);
 
           if (res.result == 'Phone Authentication Required!') {
-            myNavigator=MyNavigator(_phno, _from);
-            myNavigator.goToOtp(context);
+            myNavigator = MyNavigator(_phno, _from);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        OtpScreen(_phno, _from, widget._route)));
           }
           if (res.result == 'Phone Number already Registered!!') {
             Fluttertoast.showToast(
@@ -308,12 +317,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget _buildSkipBtn() {
     return GestureDetector(
-      onTap: () => MyNavigator.goToHome(context),
+      onTap: () => Navigator.pop(context),
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
-              text: 'Skip for now',
+              text: 'Back',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 color: Color(0xFFFF4E00),

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import '../services/wishlistservice.dart';
 import '../screens/wishlistbuilder.dart';
 import '../models/product.dart';
-import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class Wishlist extends StatefulWidget {
   final String pathUrl;
   final String userId;
-  void Function(int) onButtonTapped;
+  final void Function(int) onButtonTapped;
   Wishlist({this.pathUrl, this.userId, this.onButtonTapped});
   @override
   _WishlistState createState() => _WishlistState();
@@ -16,52 +15,14 @@ class Wishlist extends StatefulWidget {
 
 class _WishlistState extends State<Wishlist> {
   Dio dio = new Dio();
-
-  userIdentity(String userid) async {
-    // print(locationid);
-    final String pathUrl = widget.pathUrl;
-    try {
-      print('here22');
-      print(userid);
-      return await dio.post(pathUrl,
-          data: {
-            "id": userid,
-            // "sub": subcategoryid,
-          },
-          options: Options(headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }));
-    } on DioError catch (e) {
-      print('here33');
-      Fluttertoast.showToast(
-          msg: e.response.data['msg'],
-          toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 15.0);
-    }
-    print("here");
-  }
-
-  Future<List<Product>> _getWishlistedProducts() async {
-    Response response = await userIdentity(widget.userId);
-    print(response.data);
-    var responseData = response.data;
-    // print(data);
-    print('some');
-
-    return (responseData as List).map((x) => Product.fromJson(x)).toList();
-  }
-
+  WishlistService wishlistService = new WishlistService();
   var futureProducts;
   void initState() {
     super.initState();
     setState(() {
-      futureProducts = _getWishlistedProducts();
+      futureProducts = wishlistService.getWishlistedProducts(widget.userId);
     });
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +53,7 @@ class _WishlistState extends State<Wishlist> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              "././assets/images/stock.png",
+                              "././assets/images/empty.png",
                               height: 200,
                               // scale: 0.5,
                             ),
@@ -106,7 +67,8 @@ class _WishlistState extends State<Wishlist> {
                     } else {
                       print(snapshot.data);
                       return Container(
-                          child: WishlistBuilder(snapshot.data, widget.userId, widget.onButtonTapped));
+                          child: WishlistBuilder(snapshot.data, widget.userId,
+                              widget.onButtonTapped));
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
                     return Text(

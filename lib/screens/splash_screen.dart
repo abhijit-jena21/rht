@@ -3,15 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../screens/location.dart';
-import 'package:rht/screens/starter.dart';
+import '../screens/starter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../my_navigator.dart';
 
 String finalPhone;
 String finalId;
 String finalLocationId;
 String finalLocation;
+String finalAdminLocationId;
+String finalAdminLocation;
 String userId;
+bool admin = false;
+String serverLink="http://416b8be19469.ngrok.io";
 
 class UserId {
   String id;
@@ -39,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   bool isExec;
 
   userCreate() async {
-    final String pathUrl = "http://10.0.3.2:8080/api/usercreation";
+    final String pathUrl = "$serverLink/api/usercreation";
     Response response = await dio.get(pathUrl);
     var responseData = response.data;
     print(responseData);
@@ -65,6 +68,8 @@ class _SplashScreenState extends State<SplashScreen> {
       print('splash2' + finalId.toString());
       setState(() {
         getUserLocation().whenComplete(() async {
+          // print(finalAdminLocation + "on splash");
+          // print(finalAdminLocationId + 'on splash screen');
           if (finalId != null && finalLocationId == null) {
             Timer(
                 Duration(seconds: 3),
@@ -117,10 +122,15 @@ class _SplashScreenState extends State<SplashScreen> {
         await SharedPreferences.getInstance();
     var obtainedLocationId = sharedPreferences.getString('locationId');
     var obtainedLocation = sharedPreferences.getString('location');
+    var obtainedAdminLocationId =
+        sharedPreferences.getString('adminLocationId');
+    var obtainedAdminLocation = sharedPreferences.getString('adminLocation');
     setState(() {
       // finalId = obtainedId;
       finalLocationId = obtainedLocationId;
       finalLocation = obtainedLocation;
+      finalAdminLocation = obtainedAdminLocation;
+      finalAdminLocationId = obtainedAdminLocationId;
     });
   }
 

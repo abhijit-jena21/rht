@@ -1,13 +1,11 @@
 import "package:flutter/material.dart";
-import 'package:rht/models/product.dart';
-// import 'package:http/http.dart';
-import 'dart:async';
-import 'package:rht/screens/splash_screen.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rht/screens/wishlistedproductcard.dart';
-import '../screens/productdetail.dart';
 import 'package:dio/dio.dart';
+
+import '../models/product.dart';
+import '../screens/splash_screen.dart';
+import '../screens/productdetail.dart';
 import "../my_navigator.dart";
+import '../services/wishlistservice.dart';
 
 MyNavigator myNavigator;
 
@@ -20,10 +18,10 @@ class ProductCard extends StatefulWidget {
   final int price;
   final int rent;
   final int duration;
-  // String imgPath,
+  final String locationId;
   final List<String> items;
   ProductCard(this.userId, this.productId, this.name, this.img, this.details,
-      this.price, this.rent, this.duration, this.items);
+      this.price, this.rent, this.duration, this.items, this.locationId);
   @override
   _ProductCardState createState() => _ProductCardState();
 }
@@ -33,91 +31,20 @@ class _ProductCardState extends State<ProductCard> {
   bool isFav = false;
   String response;
   Dio dio = new Dio();
-
-  postToWishlist() async {
-    final String pathUrl = "http://10.0.3.2:8080/api/wishlist";
-    try {
-      print('here22');
-      print(widget.userId);
-      print(finalId);
-      print(widget.productId);
-      return await dio.post(pathUrl,
-          data: {
-            "userid": finalId,
-            "productid": widget.productId,
-            "status": !isFav,
-          },
-          options: Options(headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }));
-    } on DioError catch (e) {
-      print('here33');
-      Fluttertoast.showToast(
-          msg: e.response.data['msg'],
-          toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 15.0);
-    }
-    // setState(() {
-    //   isFavourite = isFavourite == false ? true : false;
-    // });
-  }
-
-  Future<bool> responseFromWishlist() async {
-    Response response = await postToWishlist();
-    print(response.data);
-    var responseData = response.data;
-    // boolResponse = responseData;
-    return responseData;
-  }
-
-  userIdentity(String userid) async {
-    // print(locationid);
-    final String pathUrl = "http://10.0.3.2:8080/api/wishlistproducts";
-    try {
-      print('here22');
-      print(userid);
-      return await dio.post(pathUrl,
-          data: {
-            "id": userid,
-            // "sub": subcategoryid,
-          },
-          options: Options(headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }));
-    } on DioError catch (e) {
-      print('here33');
-      Fluttertoast.showToast(
-          msg: e.response.data['msg'],
-          toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 15.0);
-    }
-    print("here");
-  }
-
-  Future<List<Product>> _getWishlistedProducts() async {
-    Response response = await userIdentity(widget.userId);
-    print(response.data);
-    var responseData = response.data;
-    // print(data);
-    print('some');
-    if (responseData != null)
-      return (responseData as List).map((x) => Product.fromJson(x)).toList();
-  }
+  WishlistService wishlistService = new WishlistService();
 
   List<Product> wishlistedProducts;
   void initState() {
-    _getWishlistedProducts().then((result) {
+    print("gggg");
+    super.initState();
+
+    wishlistService.getWishlistedProducts(widget.userId).then((result) {
       if (this.mounted) {
         setState(() {
           wishlistedProducts = result;
         });
       }
     });
-    super.initState();
   }
 
   // foobar() async {
@@ -129,9 +56,10 @@ class _ProductCardState extends State<ProductCard> {
     // print("hereiam" + wishlistedProducts[0].sId);
     if (wishlistedProducts != null) {
       for (var index = 0; index < wishlistedProducts.length; index++) {
-        if (widget.productId == wishlistedProducts[index].sId)
+        if (widget.productId == wishlistedProducts[index].sId) {
           isFav = true;
-        else
+          break;
+        } else
           isFav = false;
       }
     }
@@ -143,13 +71,17 @@ class _ProductCardState extends State<ProductCard> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ProductDetail(
-                          widget.name,
-                          widget.img,
-                          widget.details,
-                          widget.price,
-                          widget.rent,
-                          widget.duration,
-                          widget.items)));
+                        widget.userId,
+                        widget.productId,
+                        widget.name,
+                        widget.img,
+                        widget.details,
+                        widget.price,
+                        widget.rent,
+                        widget.duration,
+                        widget.locationId,
+                        widget.items
+                        )));
             },
             child: Container(
                 decoration: BoxDecoration(
@@ -173,16 +105,17 @@ class _ProductCardState extends State<ProductCard> {
                         // Hero(
                         //     tag: imgPath,
                         Container(
-                          // alignment: Alignment.center,
-                          constraints: BoxConstraints.loose(Size.fromHeight(100)),
+                            // alignment: Alignment.center,
+                            constraints:
+                                BoxConstraints.loose(Size.fromHeight(100)),
                             height: 110,
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage(widget.img[0]),
-                                    fit: BoxFit.contain))
-                                    ),
+                                    fit: BoxFit.contain))),
                         Positioned(
                           top: 5,
                           right: 10,
@@ -195,9 +128,12 @@ class _ProductCardState extends State<ProductCard> {
                                   borderRadius: BorderRadius.circular(50)),
                               color: Colors.grey[200],
                               onPressed: () async {
-                                isFavourite = await responseFromWishlist();
-                                wishlistedProducts =
-                                    await _getWishlistedProducts();
+                                isFavourite =
+                                    await wishlistService.responseFromWishlist(
+                                        finalId, widget.productId, isFav);
+                                wishlistedProducts = await wishlistService
+                                    .getWishlistedProducts(widget.userId);
+                                print("2");
 
                                 print("sss" + isFavourite.toString());
                                 setState(() {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rht/screens/location.dart';
-import 'package:rht/screens/splash_screen.dart';
 import './screens/subcategories.dart';
 import './screens/otp/otp_screen.dart';
 
@@ -13,14 +11,14 @@ class MyNavigator {
   MyNavigator(this.number, this.from);
   MyNavigator.category(this.id);
   MyNavigator.user(this.userId);
-  static void goToSignup(BuildContext context) {
+  void goToSignup(BuildContext context) {
     Navigator.pushNamed(context, "/signup");
   }
 
-  void goToOtp(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => OtpScreen(number, from)));
-  }
+  // void goToOtp(BuildContext context) {
+  //   Navigator.push(context,
+  //       MaterialPageRoute(builder: (context) => OtpScreen(number, from)));
+  // }
 
   static void goToLogin(BuildContext context) {
     Navigator.pushNamed(context, "/login");

@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/size_config.dart';
+import '../splash_screen.dart';
 import './otp_form.dart';
 
 // ignore: must_be_immutable
 class Body extends StatelessWidget {
   String _number;
   String _from;
-
+  String _route;
   Dio dio = new Dio();
-  Body(this._number, this._from);
+  Body(this._number, this._from, this._route);
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -30,21 +31,22 @@ class Body extends StatelessWidget {
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
                   child: Text("We sent your code to your phone no.",
-                  style: Theme.of(context).textTheme.headline3)),
+                      style: Theme.of(context).textTheme.headline3)),
               // Container(
               //   padding: EdgeInsets.symmetric(horizontal: 5,vertical: 20),
               //   child: buildTimer()),
-              OtpForm(_number, _from),
+              OtpForm(_number, _from, _route),
               SizedBox(height: SizeConfig.screenHeight * 0.1),
               GestureDetector(
                 onTap: () async {
-                  await dio.get("http://10.0.3.2:8080/api/resend");
+                  await dio.get("$serverLink/api/resend");
                 },
                 child: Text(
                   "Resend OTP Code",
-                  style: TextStyle(decoration: TextDecoration.underline,
-                  color: Color(0xFFFFA751),
-                  fontSize: 15),
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Color(0xFFFFA751),
+                      fontSize: 15),
                 ),
               )
             ],

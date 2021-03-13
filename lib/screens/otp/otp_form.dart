@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pinput/pin_put/pin_put.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../my_navigator.dart';
+import 'package:flutter/material.dart';
+import 'package:pinput/pin_put/pin_put.dart';
+import 'package:rht/my_navigator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../services/authservice.dart';
 
 class Res {
@@ -21,7 +21,8 @@ class Res {
 class OtpForm extends StatefulWidget {
   final String _number;
   final String _from;
-  const OtpForm(this._number, this._from);
+  final String route;
+  const OtpForm(this._number, this._from, this.route);
 
   @override
   _OtpFormState createState() => _OtpFormState();
@@ -30,6 +31,7 @@ class OtpForm extends StatefulWidget {
 class _OtpFormState extends State<OtpForm> {
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
+  MyNavigator myNavigator;
   final BoxDecoration pinPutDecoration = BoxDecoration(
     color: const Color(0xFFFFFFFF),
     borderRadius: BorderRadius.circular(10.0),
@@ -40,7 +42,7 @@ class _OtpFormState extends State<OtpForm> {
 
   void auth(otp, number, from) async {
     await AuthService().authHandler(otp, number, from).then(
-      (val) async{
+      (val) async {
         print(val);
         final Map parsed = json.decode(val.toString());
         final res = Res.fromJson(parsed);
@@ -48,10 +50,10 @@ class _OtpFormState extends State<OtpForm> {
 
         if (res.result == 'The signUp authentication is successful!' ||
             res.result == 'The Login authentication is successful!') {
-          MyNavigator.goToHome(context);
+          Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
           final SharedPreferences sharedPreferences =
-            await SharedPreferences.getInstance();
-            sharedPreferences.setString('phone', number);
+              await SharedPreferences.getInstance();
+          sharedPreferences.setString('phone', number);
         } else if (res.error == 'OTP Did not Match!') {
           Fluttertoast.showToast(
               msg: 'Please enter correct OTP',
@@ -66,7 +68,7 @@ class _OtpFormState extends State<OtpForm> {
               backgroundColor: Color(0xFF666666),
               textColor: Color(0xFFFFFFFF),
               fontSize: 15.0);
-              MyNavigator.goToSignup(context);
+          myNavigator.goToSignup(context);
         }
       },
     );

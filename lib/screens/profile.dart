@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './profilebody.dart';
-import 'package:rht/widgets/appbar.dart';
+import '../widgets/appbar.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../my_navigator.dart';

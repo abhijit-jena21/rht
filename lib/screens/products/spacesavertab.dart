@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rht/widgets/tabbody.dart';
+import '../../widgets/tabbody.dart';
 import '../../widgets/subcategorytab.dart';
 
 class SpacesaverTab extends StatefulWidget {
