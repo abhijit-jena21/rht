@@ -55,7 +55,7 @@ class _AddProductState extends State<AddProduct> {
           "Add Product",
           style: Theme.of(context)
               .textTheme
-              .headline2
+              .bodyText1
               .copyWith(color: Theme.of(context).accentColor),
         ),
         leading: Icon(

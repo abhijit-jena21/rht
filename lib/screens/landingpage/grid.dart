@@ -38,14 +38,17 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
     Material myItems(AssetImage assetImage, String title, int ind) {
       Image image = Image(
         image: assetImage,
-        width: 50.0,
-        color: Theme.of(context).primaryColor,
+        width: 40.0,
+        color: Color(0xff2873f0),
       );
       return Material(
           color: Colors.white,
-          elevation: 2.0,
-          shadowColor: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(15.0),
+          // elevation: 0.5,
+          // shadowColor: Theme.of(context).primaryColor,
+          // borderRadius: BorderRadius.circular(10.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)), 
+          side: BorderSide(width: 0.2, color: Colors.black38)
+          ),
           child: InkWell(
             onTap: () {
               print('grid' + widget.userId);
@@ -78,19 +81,30 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
             },
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(0.0),
                 child: Row(
+                  
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        image,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.08, vertical: 15),
+                          clipBehavior: Clip.none,
+                          // width: double.infinity,
+                          // constraints: BoxConstraints.expand(),
+                          child: image),
                         Container(
                           padding:
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                              EdgeInsets.fromLTRB(5,5,5,5),
                           child: Text(title,
-                              style: Theme.of(context).textTheme.bodyText1),
+                              style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black54)),
                         )
                       ],
                     )
@@ -106,8 +120,8 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
         StaggeredGridView.count(
           shrinkWrap: true,
           crossAxisCount: 3,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0,
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           children: [
             myItems(AssetImage('././assets/images/television.png'),

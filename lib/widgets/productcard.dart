@@ -86,12 +86,14 @@ class _ProductCardState extends State<ProductCard> {
             child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 3.0,
-                          blurRadius: 5.0)
-                    ],
+                    shape: BoxShape.rectangle,
+                    // border: Border.all(color: Colors.black26, width: 0.5),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //       color: Colors.grey.withOpacity(0.2),
+                    //       spreadRadius: 3.0,
+                    //       blurRadius: 5.0)
+                    // ],
                     color: Colors.white),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   SizedBox(
@@ -126,7 +128,7 @@ class _ProductCardState extends State<ProductCard> {
                               padding: EdgeInsets.zero,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50)),
-                              color: Colors.grey[200],
+                              color: Colors.white,
                               onPressed: () async {
                                 isFavourite =
                                     await wishlistService.responseFromWishlist(
@@ -142,7 +144,7 @@ class _ProductCardState extends State<ProductCard> {
                               },
                               child: Icon(
                                 isFav ? Icons.favorite : Icons.favorite_border,
-                                color: Color(0xFFEF7532),
+                                color: Colors.red.shade400,
                                 size: 18,
                               ),
                             ),
@@ -172,8 +174,9 @@ class _ProductCardState extends State<ProductCard> {
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 10),
-                    height: 40,
+                    height: 20,
                     child: Text(widget.name,
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             color: Color(0xFF575E67),
@@ -187,7 +190,7 @@ class _ProductCardState extends State<ProductCard> {
                     child: Text("₹ " + widget.rent.toString() + '/month',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: Color(0xFFCC8053),
+                            color: Theme.of(context).accentColor,
                             // fontFamily: 'Varela',
                             fontSize: 12.0)),
                   ),

@@ -18,23 +18,23 @@ class _CheckOutState extends State<CheckOut> {
               .copyWith(fontWeight: FontWeight.bold),
         ),
         content: TextFormField(
-              keyboardType: TextInputType.name,
-              maxLines: 5,
-              textCapitalization: TextCapitalization.words,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              style: Theme.of(context).textTheme.headline3,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                // filled: true,
-                hintText: 'Enter product details',
-                labelText: 'Details *',
-              ),
-              onSaved: (String value) {
-                // this._details = value;
-                // print('details=$_details');
-              },
-              // validator: _validateText,
-            ),
+          keyboardType: TextInputType.name,
+          maxLines: 5,
+          textCapitalization: TextCapitalization.words,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          style: Theme.of(context).textTheme.headline3,
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(),
+            // filled: true,
+            hintText: 'Enter product details',
+            labelText: 'Details *',
+          ),
+          onSaved: (String value) {
+            // this._details = value;
+            // print('details=$_details');
+          },
+          // validator: _validateText,
+        ),
         isActive: _currentStep >= 0,
       ),
       Step(
@@ -71,7 +71,7 @@ class _CheckOutState extends State<CheckOut> {
           "Checkout",
           style: Theme.of(context)
               .textTheme
-              .headline2
+              .bodyText1
               .copyWith(color: Theme.of(context).accentColor),
         ),
         leading: Icon(

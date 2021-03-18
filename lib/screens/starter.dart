@@ -26,7 +26,7 @@ class _StarterState extends State<Starter> {
   int _currentIndex = 0;
   String _location;
   String _locationId;
-  int _index;
+  int _index=0;
   // TabController _tabController;
 
   void initState() {

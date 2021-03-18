@@ -7,6 +7,7 @@ class CartProduct {
   int iRent;
   String img;
   String date;
+  int deposit;
 
   CartProduct(
       {this.pId,
@@ -16,7 +17,8 @@ class CartProduct {
       this.duration,
       this.iRent,
       this.img,
-      this.date});
+      this.date,
+      this.deposit});
 
   CartProduct.fromJson(Map<String, dynamic> json) {
     pId = json['p_id'];
@@ -26,7 +28,8 @@ class CartProduct {
     duration = json['duration'];
     iRent = json['_rent'];
     img = json['img'];
-    date = json['date'];
+    date = json['checkoutdate'];
+    deposit = json['deposit'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +41,8 @@ class CartProduct {
     data['duration'] = this.duration;
     data['_rent'] = this.iRent;
     data['img'] = this.img;
-    data['date'] = this.date;
+    data['checkoutdate'] = this.date;
+    data['deposit'] = this.deposit;
     return data;
   }
 }

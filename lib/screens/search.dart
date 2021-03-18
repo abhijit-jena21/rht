@@ -3,6 +3,14 @@ import '../screens/splash_screen.dart';
 import '../screens/searchbody.dart';
 
 class Search extends SearchDelegate<String> {
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    assert(context != null);
+    final ThemeData theme = Theme.of(context);
+    assert(theme != null);
+    return theme;
+  }
+
   List suggestions = ["TV", "Fridge"];
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -36,7 +44,7 @@ class Search extends SearchDelegate<String> {
       userId: finalId,
       query: query,
       locationId: finalLocationId,
-      );
+    );
   }
 
   @override

@@ -54,7 +54,7 @@ class _ProductDetailState extends State<ProductDetail> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline3,
+          style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black87),
         ),
       );
 
@@ -83,7 +83,7 @@ class _ProductDetailState extends State<ProductDetail> {
             max: max,
             divisions: divisions,
             activeColor: Theme.of(context).accentColor,
-            inactiveColor: Colors.amber.shade200,
+            inactiveColor: Colors.blue[700],
             onChanged: (newRent) {
               print(newRent);
               setState(
@@ -184,7 +184,7 @@ class _ProductDetailState extends State<ProductDetail> {
       Color conditionalColor;
       void Function() _onPressed;
       print("locationid" + widget.locationId);
-      print("shared" + finalLocationId);
+      // print("shared" + finalLocationId);
       if (widget.items.length == 0 || (widget.locationId != finalLocationId)) {
         setState(() {
           conditionalColor = Colors.grey;
@@ -198,7 +198,7 @@ class _ProductDetailState extends State<ProductDetail> {
           var now = DateTime.now();
           var formatter = DateFormat('yyyy-MM-dd');
           String formattedDate = formatter.format(now);
-          String finalDate = '${formattedDate}T00:00:00.000Z';
+          String finalDate = '${formattedDate}T00:00:00.000+00:00';
           _onPressed = () async {
             var response = await cartService.addToCart(
                 finalId,
@@ -209,7 +209,8 @@ class _ProductDetailState extends State<ProductDetail> {
                 duration,
                 calculatedRent,
                 widget.img[0],
-                finalDate);
+                finalDate,
+                1000);
             print(response.toString());
             if (response.toString() == "New product added" ||
                 response.toString() == "Count of product increased")
@@ -222,13 +223,12 @@ class _ProductDetailState extends State<ProductDetail> {
         width: MediaQuery.of(context).size.width * 0.4,
         child: RaisedButton(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          color: conditionalColor,
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          color: Theme.of(context).buttonColor,
           onPressed: _onPressed,
           child: Text(
-            'Add to Cart',
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontFamily: "Montserrat"),
+            'ADD TO CART',
+            style: Theme.of(context).textTheme.button
           ),
         ),
       );
@@ -287,7 +287,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 alignment: Alignment.centerLeft,
                 child: Text('${widget.name}',
                     overflow: TextOverflow.clip,
-                    style: Theme.of(context).textTheme.headline2)),
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black87))),
             if (widget.items.length == 0)
               Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -327,14 +327,14 @@ class _ProductDetailState extends State<ProductDetail> {
                       Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text('₹ $calculatedRent',
-                            style: Theme.of(context).textTheme.headline1),
+                            style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87)),
                       ),
                       Column(
                         children: [
                           Text('/month',
-                              style: Theme.of(context).textTheme.bodyText1),
+                              style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black54)),
                           SizedBox(
-                            height: 7,
+                            height: 3,
                           )
                         ],
                       ),
@@ -349,11 +349,22 @@ class _ProductDetailState extends State<ProductDetail> {
                       textAlign: TextAlign.end,
                       style: Theme.of(context)
                           .textTheme
-                          .headline3
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 12)),
+                          .bodyText2
+                          .copyWith(color: Colors.black87)),
                 ),
               ],
             ),
+            SizedBox(height: 10),
+            Container(
+              // padding: EdgeInsets.symmetric(horizontal: 40),
+              height: 30,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: Text("Free delivery in 72 hours",
+              style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black87),),
+              color: Colors.blue[100],
+            ),
+            SizedBox(height: 10,),
             // ],
             // ),m
             Container(
@@ -361,11 +372,11 @@ class _ProductDetailState extends State<ProductDetail> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
               height: 20,
-              color: Colors.grey[300],
+              color: Colors.white,
               child: Text(
                 "How many months do you want to rent this for?",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
+                style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black87),
               ),
             ),
             SizedBox(
@@ -380,17 +391,9 @@ class _ProductDetailState extends State<ProductDetail> {
               alignment: Alignment.topLeft,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text('${widget.details}',
-                  style: Theme.of(context).textTheme.headline3),
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black87)),
             ),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 40),
-              height: 30,
-              width: MediaQuery.of(context).size.width * 0.7,
-              alignment: Alignment.center,
-              child: Text("Delivery in 72 hours"),
-              color: Colors.orange[300],
-            ),
+            
             SizedBox(
               height: 70,
             )

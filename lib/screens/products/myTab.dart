@@ -40,6 +40,7 @@ class _MyTabState extends State<MyTab>
             backgroundColor: Colors.transparent,
             toolbarHeight: 100,
             title: TabBar(
+              labelPadding: EdgeInsets.symmetric(horizontal: 5),
               // indicator: Decoration.,
               indicatorPadding: EdgeInsets.zero,
               controller: _tabController,
@@ -48,7 +49,7 @@ class _MyTabState extends State<MyTab>
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Color(0xffffffff),
               unselectedLabelColor: Colors.grey[700],
-              labelColor: Theme.of(context).accentColor,
+              labelColor: Theme.of(context).primaryColor,
               tabs: widget.tabs,
             ),
           ),

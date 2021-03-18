@@ -22,15 +22,18 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       onTap: widget.onItemTapped,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Theme.of(context).accentColor,
-      selectedFontSize: SizeConfig.defaultSize * 1.2,
+      selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+      unselectedIconTheme: IconThemeData(color: Colors.black87),
+      selectedFontSize: 12,
       showSelectedLabels: true,
       showUnselectedLabels: false,
+      // selectedLabelStyle: Theme.of(context).textTheme.bodyText2,
       items: [
         BottomNavigationBarItem(
             icon: Icon(
               Icons.home_filled,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             label: 'Home',
             backgroundColor: Colors.white),
@@ -39,7 +42,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             icon: Icon(
               Icons.apps,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             backgroundColor: Colors.white),
         BottomNavigationBarItem(
@@ -47,7 +50,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             icon: Icon(
               MdiIcons.heart,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             backgroundColor: Colors.white),
         BottomNavigationBarItem(
@@ -55,7 +58,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             icon: Icon(
               MdiIcons.face,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             backgroundColor: Colors.white)
       ],

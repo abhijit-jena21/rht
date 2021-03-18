@@ -38,7 +38,7 @@ class _WishlistState extends State<Wishlist> {
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Text(
                 "Wishlist",
-                style: Theme.of(context).textTheme.headline2,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
             FutureBuilder<List<Product>>(

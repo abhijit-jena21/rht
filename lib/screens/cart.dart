@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import '../services/usercheckservice.dart';
 import '../models/cartproduct.dart';
 import '../services/cartservice.dart';
 import 'package:dio/dio.dart';
+import './cartbuilder.dart';
 
 import 'cartbuilder.dart';
 import 'login.dart';
@@ -31,7 +33,10 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey2 = new GlobalKey<ScaffoldState>();
+  // final GlobalKey<CartBuilderState> _cartKey = GlobalKey();
+  final StreamController streamController = StreamController();
+
   Dio dio = new Dio();
   bool exist;
   int cartSum = 0;
@@ -43,18 +48,23 @@ class _CartState extends State<Cart> {
   void initState() {
     super.initState();
     if (finalPhone == null) {
-        exist = false;
-        {
-          print("User doesn\'t exist");
-        }
-      } else {
-        exist = true;
+      exist = false;
+      {
+        print("User doesn\'t exist");
       }
+    } else {
+      exist = true;
+    }
     setState(() {
       futureProducts = cartService.getCartProducts(widget.userId);
-      
+
       // cartSum = sumOfRent();
     });
+  }
+
+  void dispose() {
+    super.dispose();
+    streamController.close();
   }
 
   void updateCartSum(int receivedSum) {
@@ -65,45 +75,54 @@ class _CartState extends State<Cart> {
 
   void showActionSnackBar(BuildContext context) {
     final snackBar = SnackBar(
+      backgroundColor: Colors.black87,
       margin: EdgeInsets.fromLTRB(20, 0, 20, 70),
       // padding: EdgeInsets.symmetric(horizontal: 20),
       behavior: SnackBarBehavior.floating,
       content: Text(
-        "Added to Cart",
+        "Some Products in cart are unavailable",
         style:
-            Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.white),
+            Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.white),
       ),
-      action: SnackBarAction(
-        label: "View Cart",
-        textColor: Color(0xFFFFA751),
-        onPressed: () {},
-      ),
+      // action: SnackBarAction(
+      //   label: "View Cart",
+      //   textColor: Color(0xFFFFA751),
+      //   onPressed: () {},
+      // ),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    _scaffoldKey2.currentState.showSnackBar(snackBar);
   }
 
   // ignore: missing_return
   Widget proceedButton(BuildContext context) {
-    Color conditionalColor=Theme.of(context).accentColor;
+    // Color conditionalColor = Theme.of(context).accentColor;
     void Function() _onPressed;
     // print("here" + res.result);
-      _onPressed = () {
+    _onPressed = () async {
+      var response = await cartService.respondStock(widget.userId);
+      // bool stock = response;
+      print(response);
+      bool stock = false;
+      // print("stcok response" + response.toString());
+      if (stock == false) {
+        print("iamhere");
+        showActionSnackBar(context);
+      } else if (stock == true) {
         usercheck.account(finalId, exist).then((result) {
-        print(result);
-        final Map parsed = json.decode(result.toString());
-        res = Res.fromJson(parsed);
-        print(res.result);
-        if (res.result == "Not registered")
-      {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => LoginScreen("/checkout")));
+          print(result);
+          final Map parsed = json.decode(result.toString());
+          res = Res.fromJson(parsed);
+          print(res.result);
+          if (res.result == "Not registered") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LoginScreen("/checkout")));
+          }
+        });
       }
-      });
-      
-        
-
-      };
-    // if (widget.items.length == 0 || (widget.locationId != finalLocationId)) {
+    };
+    // if () {
     //   setState(() {
     //     conditionalColor = Colors.grey;
     //     print("i");
@@ -139,13 +158,13 @@ class _CartState extends State<Cart> {
       height: 40,
       width: MediaQuery.of(context).size.width * 0.4,
       child: RaisedButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        color: conditionalColor,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        color: Theme.of(context).buttonColor,
         onPressed: _onPressed,
         child: Text(
-          'Proceed',
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontFamily: "Montserrat"),
+          'PROCEED',
+          style: Theme.of(context).textTheme.button,
         ),
       ),
     );
@@ -155,6 +174,7 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey2,
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             // height: MediaQuery.of(context).size.h,
@@ -163,9 +183,13 @@ class _CartState extends State<Cart> {
             Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              color: Theme.of(context).primaryColor,
               child: Text(
-                "Cart",
-                style: Theme.of(context).textTheme.headline2,
+                "My Cart",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
             FutureBuilder<List<CartProduct>>(
@@ -195,7 +219,7 @@ class _CartState extends State<Cart> {
                       print(snapshot.data);
                       return Container(
                           child: CartBuilder(
-                              snapshot.data, widget.userId, updateCartSum));
+                              snapshot.data, widget.userId, streamController));
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
                     return Text(
@@ -232,19 +256,26 @@ class _CartState extends State<Cart> {
                   Container(
                     height: 20,
                     width: MediaQuery.of(context).size.width * 0.4,
-                    child: Text(
-                      cartSum != 0 ? '₹$cartSum/month' : "",
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontFamily: "Montserrat"),
-                    ),
+                    child: StreamBuilder<Object>(
+                        stream: streamController.stream,
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.data != null
+                                ? '₹${snapshot.data}/month'
+                                : "",
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontFamily: "Montserrat"),
+                          );
+                        }),
                   ),
                   Container(
                     height: 20,
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: Text(
-                      'Refundable Deposit ₹',
+                      // 'Refundable Deposit ₹',
+                      '',
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.black,

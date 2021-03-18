@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../screens/location.dart';
 import '../screens/starter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 String finalPhone;
 String finalId;
@@ -14,7 +16,7 @@ String finalAdminLocationId;
 String finalAdminLocation;
 String userId;
 bool admin = false;
-String serverLink="http://416b8be19469.ngrok.io";
+String serverLink = "http://6bc8cecc94ec.ngrok.io";
 
 class UserId {
   String id;
@@ -151,73 +153,83 @@ class _SplashScreenState extends State<SplashScreen> {
     // }
 
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(color: Color(0xFF8B4513)),
-            child: Image.asset(
-              'assets/images/splash.png',
-              fit: BoxFit.fill,
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Color(0xFFCD853F),
-                        radius: 50.0,
-                        child: Icon(
-                          Icons.shopping_cart,
-                          color: Colors.brown,
-                          size: 50.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                      ),
-                      Text(
-                        "RHT",
-                        style: TextStyle(
-                            color: Colors.brown,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                    Text(
-                      "Easy Rental \nfor everyone",
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0,
-                          color: Colors.brown),
-                    )
-                  ],
-                ),
-              )
+        body: Stack(
+      alignment: AlignmentDirectional.center,
+      fit: StackFit.expand,
+      children: <Widget>[
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).accentColor
             ],
-          )
-        ],
-      ),
-    );
+          )),
+          // child: Image.asset(
+          //   'assets/images/splash.png',
+          //   fit: BoxFit.fill,
+          // ),
+          child: FadeAnimatedTextKit(
+            duration: Duration(seconds: 5),
+            text:
+            ["RHT"],
+            textStyle: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 50.0),
+        ),
+          ),
+        
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: <Widget>[
+        //     Expanded(
+        //       flex: 2,
+        //       child:
+        // Container(
+        // child: Column(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: <Widget>[
+        //     CircleAvatar(
+        //       backgroundColor: Color(0xFFCD853F),
+        //       radius: 50.0,
+        //       child: Icon(
+        //         Icons.shopping_cart,
+        //         color: Colors.brown,
+        //         size: 50.0,
+        //       ),
+        //     ),
+        //     Padding(
+        //       padding: EdgeInsets.only(top: 10.0),
+        //     ),
+        
+        // ],
+        // ),
+        // ),
+
+        // Expanded(
+        //   flex: 1,
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: <Widget>[
+        //       CircularProgressIndicator(),
+        //       Padding(
+        //         padding: EdgeInsets.only(top: 20.0),
+        //       ),
+        //       Text(
+        //         "Easy Rental \nfor everyone",
+        //         softWrap: true,
+        //         textAlign: TextAlign.center,
+        //         style: TextStyle(
+        //             fontWeight: FontWeight.bold,
+        //             fontSize: 15.0,
+        //             color: Colors.brown),
+        //       )
+        //     ],
+        //   ),
+        // )
+      ],
+    ));
   }
 }

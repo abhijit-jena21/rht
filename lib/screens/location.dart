@@ -24,16 +24,19 @@ class Location extends StatelessWidget {
         // height: 20,
         child: InkWell(
           child: Card(
-            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              side: BorderSide(width: 0.5, color: Theme.of(context).accentColor)),
+            // elevation: 3,
             child: Column(
               children: [
                 image,
                 SizedBox(
-                  height: 10,
+                  height: 8,
                 ),
                 Text(
                   location,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.black54),
                 )
               ],
             ),
@@ -41,6 +44,8 @@ class Location extends StatelessWidget {
           onTap: () async {
             finalAdminLocation = location;
             finalAdminLocationId = locationId;
+            finalLocation = location;
+            finalLocationId = locationId;
             final SharedPreferences sharedPreferences =
                 await SharedPreferences.getInstance();
             sharedPreferences.setString('locationId', locationId);
@@ -73,12 +78,27 @@ class Location extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.close,
+              color: Colors.black87,
+            ),
+            onPressed:
+                finalLocation == null ? null : () => Navigator.pop(context),
+          )
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Choose your city",
-            style: Theme.of(context).textTheme.headline1,
+            style: Theme.of(context).textTheme.headline5.copyWith(color: Theme.of(context).primaryColor),
           ),
           SizedBox(
             height: 20,
@@ -92,7 +112,7 @@ class Location extends StatelessWidget {
             children: [
               myItems(AssetImage('././assets/images/location/bangalore.jpg'),
                   'Bangalore', '6035f6e437bb23b5e8310b41'), //true
-              myItems(AssetImage('././assets/images/location/chennai.jpeg'),
+              myItems(AssetImage('././assets/images/location/chennai.jpg'),
                   'Chennai', '6035f85e87e39d26742469fl'),
               myItems(AssetImage('././assets/images/location/hyderabad.jpg'),
                   'Hyderabad', '6035f85e87e39d26742469fa'),

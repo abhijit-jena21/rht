@@ -21,7 +21,7 @@ class _AdminHomeState extends State<AdminHome> {
           elevation: 0,
           title: Text(
             'RHT Admin',
-            style: Theme.of(context).textTheme.headline1,
+            style: Theme.of(context).textTheme.headline6,
           ),
         ),
         // bottomNavigationBar: MyBottomNavigationBar(),

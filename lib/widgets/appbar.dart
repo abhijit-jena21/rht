@@ -16,22 +16,25 @@ class _MyAppBarState extends State<MyAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF2873f0),
       elevation: 0,
       title: Text(
         'RHT',
-        style: Theme.of(context).textTheme.headline1,
+        style: Theme.of(context)
+            .textTheme
+            .headline5
+            .copyWith(color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold),
       ),
       actions: [
         new IconButton(
             icon: Icon(Icons.search),
-            color: Color(0xff5A5A5A),
+            color: Color(0xffFFFFFF),
             onPressed: () {
               showSearch(context: context, delegate: Search());
             }),
         new IconButton(
           icon: Icon(Icons.shopping_cart),
-          color: Color(0xff5A5A5A),
+          color: Color(0xffFFFFFF),
           onPressed: () {
             Navigator.push(
                 context,
@@ -51,7 +54,7 @@ class _MyAppBarState extends State<MyAppBar> {
 //     elevation: 0,
 //     title: Text(
 //       'RHT',
-//       style: Theme.of(context).textTheme.headline1,
+//       style: Theme.of(context).textTheme.headline6,
 //     ),
 //     actions: [
 //       new IconButton(

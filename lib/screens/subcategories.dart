@@ -13,7 +13,7 @@ class SubCategories extends StatefulWidget {
 
 class _SubCategoriesState extends State<SubCategories> {
   // final CategoriesScroller categoriesScroller = CategoriesScroller();
-  
+
   List<Widget> itemsData = [];
 
   void getPostsData() {
@@ -39,15 +39,12 @@ class _SubCategoriesState extends State<SubCategories> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      post["sub_id"],
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontFamily: 'Montserrat',
-                        fontSize: 15,
-
-                      )
-                    ),
+                    Text(post["sub_id"],
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontFamily: 'Montserrat',
+                          fontSize: 15,
+                        )),
                   ],
                 ),
                 Image.network(
@@ -83,7 +80,7 @@ class _SubCategoriesState extends State<SubCategories> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Text(widget.id, style: Theme.of(context).textTheme.headline2),
+                  Text(widget.id, style: Theme.of(context).textTheme.bodyText1),
                 ],
               ),
               const SizedBox(

@@ -5,7 +5,7 @@ import 'package:rht/screens/splash_screen.dart';
 class CartService {
   Dio dio = new Dio();
   addToCart(finalId, productId, locationId, name, count, duration, rent, image,
-      date) async {
+      date, deposit) async {
     final String pathUrl = "$serverLink/api/cartfirsttime";
     try {
       print('here22');
@@ -23,7 +23,8 @@ class CartService {
               "duration": duration,
               "_rent": rent,
               "img": image,
-              "date": date
+              "checkoutdate": date,
+              "deposit": deposit
             }
           },
           options: Options(
@@ -44,7 +45,7 @@ class CartService {
       print(userid);
       return await dio.post(pathUrl,
           data: {
-            "userid": userid,
+            "id": userid,
           },
           options: Options(headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -68,8 +69,7 @@ class CartService {
   }
 
   deleteFromCart(userid, pId, count, duration) async {
-    final String pathUrl =
-        "$serverLink/api/removecartproduct";
+    final String pathUrl = "$serverLink/api/removecartproduct";
     try {
       print('here22');
       // print(widget.userId);
@@ -85,7 +85,7 @@ class CartService {
           options: Options(headers: {
             'Content-type': 'application/json; charset=UTF-8',
           }));
-    // ignore: unused_catch_clause
+      // ignore: unused_catch_clause
     } on DioError catch (e) {
       print('here33');
     }
@@ -108,5 +108,69 @@ class CartService {
     } on DioError catch (e) {
       print('here33');
     }
+  }
+
+  checkStock(userid) async{
+    final String pathUrl = "$serverLink/api/stockcheck";
+    try {
+      print('here22');
+      return await dio.post(pathUrl,
+          data: {
+            "id": userid,
+          },
+          options: Options(headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }));
+    } on DioError catch (e) {
+      print('here33');
+    }
+  }
+
+  Future<String> respondStock(userid) async {
+    Response response = await checkStock(userid);
+    // print(response.data);
+    var responseData = response.data;
+    return responseData;
+  }
+
+  cartUpdate(
+      userId, value, status, pId, duration, count, _rent, deposit) async {
+    final String pathUrl = "$serverLink/api/cartupdate";
+    try {
+      print("here22");
+      print(count);
+      return await dio.post(pathUrl,
+          data: {
+            "userid": userId,
+            "value": value,
+            "status": status,
+            "product": {
+              "p_id": pId,
+              "duration": duration,
+              "count": count,
+              "_rent": _rent,
+              "deposit": 1000
+            }
+          },
+          options: Options(headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }));
+    } on DioError catch (e) {
+      print("here33");
+    }
+  }
+
+  countChange(
+      userId, value, status, pId, duration, count, _rent, deposit) async {
+    Response response = await cartUpdate(
+        userId, value, status, pId, duration, count, _rent, deposit);
+    print(response.data);
+    var responseData = response.data;
+    // print(data);
+    print('some');
+    // if (responseData != null)
+    //   return (responseData as List)
+    //       .map((x) => CartProduct.fromJson(x))
+    //       .toList();
   }
 }

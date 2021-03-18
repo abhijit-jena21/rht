@@ -10,6 +10,8 @@ class CartProductCard extends StatefulWidget {
   final String userId;
   final int index;
   final Function(int) notifyParent;
+  final Function(int, int) notifyParent2;
+  final Function(int, int) notifyParent3;
   final int count;
   final int duration;
   final int rent;
@@ -25,6 +27,8 @@ class CartProductCard extends StatefulWidget {
     this.userId,
     this.index,
     this.notifyParent,
+    this.notifyParent2,
+    this.notifyParent3,
     this.count,
     this.duration,
     this.rent,
@@ -42,65 +46,69 @@ class _CartProductCardState extends State<CartProductCard> {
   bool isFav = false;
   String response;
   int stock;
-  int _btn1SelectedVal;
-  _CartProductCardState(this._btn1SelectedVal);
+  int _count;
+  _CartProductCardState(this._count);
   Dio dio = new Dio();
   CartService cartService = new CartService();
 
-  static const menuItems = <int>[
-    1,
-    2,
-  ];
-  final List<DropdownMenuItem<int>> _dropDownMenuItems = menuItems
-      .map(
-        (int value) => DropdownMenuItem<int>(
-          value: value,
-          child: Text(
-            value.toString(),
-            style: TextStyle(
-                color: Colors.black87, fontFamily: "Montserrat", fontSize: 15),
-          ),
-        ),
-      )
-      .toList();
+  // int cast(x) => x is int ? x : null;
 
-  // void initState() {
-  //   super.initState();
-  //   cartService.getStock(widget.productId).then((result) {
-  //     setState(() {
-  //       stock = result;
-  //     });
-  //   });
-  // }
+  void initState() {
+    super.initState();
+    checkStock().then((result) {
+      // print(result);
+      // print(result.runtimeType);
+      setState(() {
+        stock = result;
+        print(stock);
+      });
+    });
+    // print("result"+result.toString());
+  }
 
-  // Widget stockWidget() {
-  //   if (stock > widget.count)
-  //     return Container(
-  //       child: Text("In stock",
-  //           style: Theme.of(context)
-  //               .textTheme
-  //               .bodyText1
-  //               .copyWith(fontWeight: FontWeight.normal, color: Colors.green)),
-  //     );
-  //   else if (stock < widget.count)
-  //   return Container(
-  //       child: Text("Only $stock left",
-  //           style: Theme.of(context)
-  //               .textTheme
-  //               .bodyText1
-  //               .copyWith(fontWeight: FontWeight.normal, color: Colors.red)),
-  //     );
-  //   else if (stock == 0)
-  //   return Container(
-  //       child: Text("Out of stock",
-  //           style: Theme.of(context)
-  //               .textTheme
-  //               .bodyText1
-  //               .copyWith(fontWeight: FontWeight.normal, color: Colors.red)),
-  //     );
+  Future<int> checkStock() async {
+    Response response = await cartService.getStock(widget.productId);
+    print(response.data);
+    // print("responseData" + responseData.toString());
+    return response.data;
+  }
 
-
-  // }
+  Widget stockWidget() {
+    if (stock == null) {
+      return Container(
+        child: Text("",
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(fontWeight: FontWeight.normal, color: Colors.green)),
+      );
+    } else {
+      if (stock >= _count)
+        return Container(
+          child: Text("In stock",
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.green,
+                  fontSize: 12)),
+        );
+      else if (stock < _count)
+        return Container(
+          child: Text("Only $stock left",
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.red,
+                  fontSize: 12)),
+        );
+      else if (stock == 0)
+        return Container(
+          child: Text("Out of stock",
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.red,
+                  fontSize: 12)),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,120 +118,221 @@ class _CartProductCardState extends State<CartProductCard> {
             onTap: () {},
             child: Container(
                 decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade200, width: 2),
                     borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 3.0,
-                          blurRadius: 5.0)
-                    ],
                     color: Colors.white),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Container(
-                      constraints: BoxConstraints.loose(Size.fromHeight(100)),
-                      height: 110,
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage(widget.img ??
-                                  "https://4.bp.blogspot.com/-1f1SDFIx3dY/Uh92eZAQ90I/AAAAAAAAHM4/5oiB4zC_tQ4/s1600/Photo-Background-White4.jpg"),
-                              fit: BoxFit.contain))),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                child: IntrinsicHeight(
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IntrinsicHeight(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  // constraints: BoxConstraints.loose(Size.fromHeight(100)),
+                                  height: 100,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(widget.img ??
+                                              "https://4.bp.blogspot.com/-1f1SDFIx3dY/Uh92eZAQ90I/AAAAAAAAHM4/5oiB4zC_tQ4/s1600/Photo-Background-White4.jpg"),
+                                          fit: BoxFit.contain))),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RawMaterialButton(
+                                      constraints: BoxConstraints.tightFor(
+                                          width: 20, height: 20),
+                                      elevation: 0.0,
+                                      onPressed: () async {
+                                        var result =
+                                            await cartService.countChange(
+                                                widget.userId,
+                                                1,
+                                                false,
+                                                widget.productId,
+                                                widget.duration,
+                                                _count,
+                                                widget.rent,
+                                                1500);
+                                        print(result);
+                                        setState(() {
+                                          _count -= 1;
+                                          widget.notifyParent3(widget.index, 1);
+                                        });
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      fillColor: Color(0xFFFFFFFF),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: Theme.of(context).accentColor,
+                                        size: 20,
+                                      )),
+                                  // SizedBox(width: 10,),
+                                  Text(
+                                    "${_count}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: Colors.black87),
+                                  ),
 
-                    // mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Text(
-                          "${widget.name}",
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline3.copyWith(
-                              color: Color(0xFFFFA751),
-                              fontWeight: FontWeight.bold),
+                                  RawMaterialButton(
+                                      constraints: BoxConstraints.tightFor(
+                                          width: 20, height: 20),
+                                      elevation: 0.0,
+                                      onPressed: () async {
+                                        var result =
+                                            await cartService.countChange(
+                                                widget.userId,
+                                                1,
+                                                true,
+                                                widget.productId,
+                                                widget.duration,
+                                                _count,
+                                                widget.rent,
+                                                1500);
+                                        print(result);
+                                        setState(() {
+                                          _count += 1;
+                                          widget.notifyParent2(widget.index, 1);
+                                        });
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      fillColor: Color(0xFFFFFFFF),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Theme.of(context).accentColor,
+                                        size: 20,
+                                      ))
+                                ],
+                              ),
+                              SizedBox(height: 10,)
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: Text("₹${widget.rent}/month",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                .copyWith(fontWeight: FontWeight.bold)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        child: Text("${widget.duration} months",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(fontWeight: FontWeight.normal)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      // stockWidget()
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.35,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
                           // mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              "   Qty:   ",
-                              style: Theme.of(context).textTheme.headline3,
+                            SizedBox(
+                              height: 20,
                             ),
                             Container(
-                              child: DropdownButton<int>(
-                                // Must be one of items.value.
-                                value: _btn1SelectedVal,
-                                iconSize: 20,
-
-                                onChanged: (int newValue) {
-                                  setState(() {
-                                    _btn1SelectedVal = newValue;
-                                  });
-                                },
-                                items: this._dropDownMenuItems,
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              child: Text(
+                                "${widget.name}",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    .copyWith(
+                                        color: Theme.of(context).accentColor,
+                                        // fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                               ),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  child: Text("Rent:",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(color: Colors.black54)),
+                                ),
+                                Container(
+                                  child: Text(" ₹${widget.rent}/month",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(
+                                            // fontWeight: FontWeight.w800,
+                                            color: Colors.black87,
+                                          )),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  child: Text("Deposit:",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(color: Colors.black54)),
+                                ),
+                                Container(
+                                  child: Text(" ₹1500",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(
+                                              // fontWeight: FontWeight.w800,
+                                              color: Colors.black87)),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              child: Text(
+                                  "${widget.duration} months | 3 day delivery",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black54)),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            stockWidget()
                           ],
                         ),
-                      ),
-                      FlatButton(
-                        child: Text(
-                          "Remove",
-                          style: Theme.of(context).textTheme.bodyText2,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              color: Colors.black45,
+                              icon: Icon(Icons.delete_forever),
+                              onPressed: () async {
+                                await cartService
+                                    .deleteFromCart(finalId, widget.productId,
+                                        widget.count, widget.duration)
+                                    .whenComplete(() {
+                                  widget.notifyParent(widget.index);
+                                });
+                              },
+                            )
+                          ],
                         ),
-                        color: Colors.red,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        onPressed: () async {
-                          await cartService
-                              .deleteFromCart(finalId, widget.productId,
-                                  widget.count, widget.duration)
-                              .whenComplete(() {
-                            widget.notifyParent(widget.index);
-                          });
-                        },
-                      )
-                    ],
-                  )
-                ]))));
+                        
+                      ]),
+                ))));
   }
 }

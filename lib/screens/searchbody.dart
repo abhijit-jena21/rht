@@ -65,7 +65,7 @@ class _SearchBodyState extends State<SearchBody> {
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   "Search results for \'${widget.query}\'",
-                  style: Theme.of(context).textTheme.headline2,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
               FutureBuilder<List<Product>>(
