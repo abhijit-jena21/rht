@@ -17,11 +17,12 @@ class ProductList extends StatelessWidget {
     //     child: Text("Wow, such empty"),
     //   );
     // } else {
+    if(admin==false)
     return GridView.builder(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 5.0,
+        crossAxisSpacing: 10.0,
         mainAxisSpacing: 5.0,
         childAspectRatio: 1,
       ),
@@ -29,7 +30,6 @@ class ProductList extends StatelessWidget {
       itemCount: snapshot.length,
       // ignore: missing_return
       itemBuilder: (BuildContext context, int index) {
-        if (admin==false)
           return ProductCard(
               userId,
               snapshot[index].sId,
@@ -38,21 +38,36 @@ class ProductList extends StatelessWidget {
               snapshot[index].details,
               snapshot[index].price,
               snapshot[index].rent,
+              snapshot[index].deposit,
               snapshot[index].duration,
               snapshot[index].itemsid,
               snapshot[index].locationid);
-        else
+      },
+    );
+    else
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 5.0,
+        childAspectRatio: 2.3,
+      ),
+      padding: EdgeInsets.all(5.0),
+      itemCount: snapshot.length,
+      // ignore: missing_return
+      itemBuilder: (BuildContext context, int index) {
           return AdminProductCard(
-            snapshot[index].sId,
+              snapshot[index].sId,
               snapshot[index].name,
               snapshot[index].img,
               snapshot[index].details,
               snapshot[index].price,
               snapshot[index].rent,
+              snapshot[index].deposit,
               snapshot[index].duration,
               snapshot[index].itemsid,
-              snapshot[index].locationid
-          );
+              snapshot[index].locationid);
       },
     );
   }

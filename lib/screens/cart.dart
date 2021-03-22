@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:rht/screens/checkout.dart';
 import 'package:rht/screens/splash_screen.dart';
 import '../services/usercheckservice.dart';
 import '../models/cartproduct.dart';
@@ -35,7 +36,8 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   final GlobalKey<ScaffoldState> _scaffoldKey2 = new GlobalKey<ScaffoldState>();
   // final GlobalKey<CartBuilderState> _cartKey = GlobalKey();
-  final StreamController streamController = StreamController();
+  final StreamController streamController = StreamController.broadcast();
+  final StreamController streamController2 = StreamController.broadcast();
 
   Dio dio = new Dio();
   bool exist;
@@ -65,6 +67,7 @@ class _CartState extends State<Cart> {
   void dispose() {
     super.dispose();
     streamController.close();
+    streamController2.close();
   }
 
   void updateCartSum(int receivedSum) {
@@ -102,24 +105,33 @@ class _CartState extends State<Cart> {
       var response = await cartService.respondStock(widget.userId);
       // bool stock = response;
       print(response);
-      bool stock = false;
+      print(response.runtimeType);
+      // var text1 = utf8.encode("success").toString();
+      // print(text1);
+      // var text2 = utf8.encode(response).toString();
+      // print(text2);
+      // bool stock = false;
       // print("stcok response" + response.toString());
-      if (stock == false) {
+      if (response.compareTo("fail") == 0) {
         print("iamhere");
         showActionSnackBar(context);
-      } else if (stock == true) {
-        usercheck.account(finalId, exist).then((result) {
-          print(result);
-          final Map parsed = json.decode(result.toString());
-          res = Res.fromJson(parsed);
-          print(res.result);
-          if (res.result == "Not registered") {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LoginScreen("/checkout")));
-          }
-        });
+      } else if (response.compareTo("success") == 0) {
+        print("mehere");
+        // usercheck.account(finalId, exist).then((result) {
+        //   print(result);
+        //   final Map parsed = json.decode(result.toString());
+        //   res = Res.fromJson(parsed);
+        //   print(res.result);
+        if (finalPhone == null) {
+          print(finalPhone.toString());
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LoginScreen("/checkout")));
+        } else
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CheckOut()));
+        // });
       }
     };
     // if () {
@@ -219,7 +231,7 @@ class _CartState extends State<Cart> {
                       print(snapshot.data);
                       return Container(
                           child: CartBuilder(
-                              snapshot.data, widget.userId, streamController));
+                              snapshot.data, widget.userId, streamController, streamController2));
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
                     return Text(
@@ -261,7 +273,7 @@ class _CartState extends State<Cart> {
                         builder: (context, snapshot) {
                           return Text(
                             snapshot.data != null
-                                ? '₹${snapshot.data}/month'
+                                ? 'Rent: ₹${snapshot.data}/month'
                                 : "",
                             style: TextStyle(
                                 fontSize: 15,
@@ -273,13 +285,19 @@ class _CartState extends State<Cart> {
                   Container(
                     height: 20,
                     width: MediaQuery.of(context).size.width * 0.4,
-                    child: Text(
-                      // 'Refundable Deposit ₹',
-                      '',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.black,
-                          fontFamily: "Montserrat"),
+                    child: StreamBuilder<Object>(
+                      stream: streamController2.stream,
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.data!=null
+                          ? 'Deposit: ₹${snapshot.data}'
+                          :'',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.black,
+                              fontFamily: "Montserrat"),
+                        );
+                      }
                     ),
                   ),
                 ],

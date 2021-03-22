@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:dio/dio.dart";
+import 'package:rht/screens/productdetailbuilder.dart';
 import '../screens/splash_screen.dart';
 import '../services/cartservice.dart';
 import "../my_navigator.dart";
@@ -16,6 +17,7 @@ class CartProductCard extends StatefulWidget {
   final int duration;
   final int rent;
   final String img;
+  final int deposit;
   final String locationId;
   final String name;
   final String productId;
@@ -33,6 +35,7 @@ class CartProductCard extends StatefulWidget {
     this.duration,
     this.rent,
     this.img,
+    this.deposit,
     this.locationId,
     this.name,
     this.productId,
@@ -83,7 +86,9 @@ class _CartProductCardState extends State<CartProductCard> {
                 .copyWith(fontWeight: FontWeight.normal, color: Colors.green)),
       );
     } else {
-      if (stock >= _count)
+      if (stock >= _count) {
+        print(_count);
+        print("in if");
         return Container(
           child: Text("In stock",
               style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -91,7 +96,7 @@ class _CartProductCardState extends State<CartProductCard> {
                   color: Colors.green,
                   fontSize: 12)),
         );
-      else if (stock < _count)
+      } else if (stock < _count) {
         return Container(
           child: Text("Only $stock left",
               style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -99,7 +104,7 @@ class _CartProductCardState extends State<CartProductCard> {
                   color: Colors.red,
                   fontSize: 12)),
         );
-      else if (stock == 0)
+      } else if (stock == 0)
         return Container(
           child: Text("Out of stock",
               style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -115,7 +120,13 @@ class _CartProductCardState extends State<CartProductCard> {
     return Padding(
         padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
         child: InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          ProductDetailBuilder(widget.productId)));
+            },
             child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade200, width: 2),
@@ -129,16 +140,21 @@ class _CartProductCardState extends State<CartProductCard> {
                       children: [
                         IntrinsicHeight(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: 10,
+                              ),
                               Container(
                                   // constraints: BoxConstraints.loose(Size.fromHeight(100)),
-                                  height: 100,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.25,
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
-                                  margin: EdgeInsets.symmetric(horizontal: 20),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 0),
+                                  // padding: EdgeInsets.symmetric(
+                                  //     horizontal: 20, vertical: 10),
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           image: NetworkImage(widget.img ??
@@ -149,25 +165,35 @@ class _CartProductCardState extends State<CartProductCard> {
                                 children: [
                                   RawMaterialButton(
                                       constraints: BoxConstraints.tightFor(
-                                          width: 20, height: 20),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05),
                                       elevation: 0.0,
-                                      onPressed: () async {
-                                        var result =
-                                            await cartService.countChange(
-                                                widget.userId,
-                                                1,
-                                                false,
-                                                widget.productId,
-                                                widget.duration,
-                                                _count,
-                                                widget.rent,
-                                                1500);
-                                        print(result);
-                                        setState(() {
-                                          _count -= 1;
-                                          widget.notifyParent3(widget.index, 1);
-                                        });
-                                      },
+                                      onPressed: _count == 1
+                                          ? null
+                                          : () async {
+                                              var result =
+                                                  await cartService.countChange(
+                                                      widget.userId,
+                                                      1,
+                                                      false,
+                                                      widget.productId,
+                                                      widget.duration,
+                                                      _count,
+                                                      widget.rent,
+                                                      widget.deposit);
+                                              print(result);
+                                              setState(() {
+                                                _count -= 1;
+                                                widget.notifyParent3(
+                                                    widget.index, 1);
+                                              });
+                                            },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(5)),
@@ -188,7 +214,14 @@ class _CartProductCardState extends State<CartProductCard> {
 
                                   RawMaterialButton(
                                       constraints: BoxConstraints.tightFor(
-                                          width: 20, height: 20),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05),
                                       elevation: 0.0,
                                       onPressed: () async {
                                         var result =
@@ -200,7 +233,7 @@ class _CartProductCardState extends State<CartProductCard> {
                                                 widget.duration,
                                                 _count,
                                                 widget.rent,
-                                                1500);
+                                                widget.deposit);
                                         print(result);
                                         setState(() {
                                           _count += 1;
@@ -218,7 +251,9 @@ class _CartProductCardState extends State<CartProductCard> {
                                       ))
                                 ],
                               ),
-                              SizedBox(height: 10,)
+                              // SizedBox(
+                              //   height: 10,
+                              // )
                             ],
                           ),
                         ),
@@ -315,7 +350,7 @@ class _CartProductCardState extends State<CartProductCard> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
                               color: Colors.black45,
@@ -331,7 +366,6 @@ class _CartProductCardState extends State<CartProductCard> {
                             )
                           ],
                         ),
-                        
                       ]),
                 ))));
   }

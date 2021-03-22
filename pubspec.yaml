@@ -49,6 +49,13 @@ dev_dependencies:
   image_picker: ^0.6.7+17
   animated_text_kit: ^3.0.2
   google_fonts: ^1.1.2
+  charts_flutter: ^0.9.0
+  flutter_launcher_icons: ^0.8.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/RHTlogo.jpg"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -75,6 +82,7 @@ flutter:
   assets:
   - assets/images/
   - assets/images/location/
+  - assets/images/subcategory/
   # - assets/images/subcategories/
     # - assets/images/p2.jpg
     # - assets/images/armchair.png

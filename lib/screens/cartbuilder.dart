@@ -13,45 +13,63 @@ class CartBuilder extends StatefulWidget {
   final String userId;
   // final IntCallback notifyParent;
   final StreamController streamController;
+  final StreamController streamController2;
   // final Function refresh;
-  CartBuilder(this.snapshot, this.userId, this.streamController);
+  CartBuilder(this.snapshot, this.userId, this.streamController, this.streamController2);
   @override
   CartBuilderState createState() => CartBuilderState();
 }
 
 class CartBuilderState extends State<CartBuilder> {
   var cartsum = 0;
+  var depositSum = 0;
   // final StreamController streamController = StreamController();
 
   cartSum({int index}) {
     for (var i = 0; i < widget.snapshot.length; i++) {
       if (finalLocationId == widget.snapshot[i].locationid) {
         cartsum += widget.snapshot[i].iRent * widget.snapshot[i].count;
+        depositSum += widget.snapshot[i].deposit * widget.snapshot[i].count;
       }
     }
     if (index != null)
       cartsum -= widget.snapshot[index].iRent * widget.snapshot[index].count;
     print(cartsum);
     widget.streamController.sink.add(cartsum);
+    widget.streamController2.sink.add(depositSum);
   }
 
   cartMinus({int index}) {
-    if (index != null)
+    if (index != null) {
       cartsum -= widget.snapshot[index].iRent * widget.snapshot[index].count;
+      depositSum -=
+          widget.snapshot[index].deposit * widget.snapshot[index].count;
+    }
+
     print(cartsum);
     widget.streamController.sink.add(cartsum);
+    widget.streamController2.sink.add(depositSum);
   }
 
   cartUpdateAdd({int index, int count}) {
-    if (index != null) cartsum += widget.snapshot[index].iRent * count;
+    if (index != null) {
+      cartsum += widget.snapshot[index].iRent * count;
+      depositSum += widget.snapshot[index].iRent * count;
+    }
+
     print(cartsum);
     widget.streamController.sink.add(cartsum);
+    widget.streamController2.sink.add(depositSum);
   }
 
   cartUpdateMinus({int index, int count}) {
-    if (index != null) cartsum -= widget.snapshot[index].iRent * count;
+    if (index != null) {
+      cartsum -= widget.snapshot[index].iRent * count;
+      depositSum -= widget.snapshot[index].iRent * count;
+    }
     print(cartsum);
     widget.streamController.sink.add(cartsum);
+    widget.streamController2.sink.add(depositSum);
   }
 
   void initState() {
@@ -78,7 +96,7 @@ class CartBuilderState extends State<CartBuilder> {
           crossAxisCount: 1,
           crossAxisSpacing: 10.0,
           mainAxisSpacing: 5.0,
-          childAspectRatio: 1.9,
+          childAspectRatio: 2,
         ),
         padding: EdgeInsets.all(2.0),
         itemCount: widget.snapshot.length,
@@ -117,6 +135,7 @@ class CartBuilderState extends State<CartBuilder> {
                 widget.snapshot[index].duration,
                 widget.snapshot[index].iRent,
                 widget.snapshot[index].img,
+                widget.snapshot[index].deposit,
                 widget.snapshot[index].locationid,
                 widget.snapshot[index].name,
                 widget.snapshot[index].pId);

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:rht/screens/landingpage/locationpicker.dart';
 import '../screens/cart.dart';
 import '../screens/splash_screen.dart';
 import '../screens/search.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final String locationId;
+  final String location;
+  final String userId;
+  MyAppBar({this.locationId, this.location, this.userId});
   @override
   // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -16,8 +21,15 @@ class _MyAppBarState extends State<MyAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
+      centerTitle: true,
+      leadingWidth: MediaQuery.of(context).size.width*0.45,
       backgroundColor: Color(0xFF2873f0),
       elevation: 0,
+      leading: LocationPicker(
+        locationId: widget.locationId,
+        location: widget.location,
+        userId: widget.userId,
+      ),
       title: Text(
         'RHT',
         style: Theme.of(context)

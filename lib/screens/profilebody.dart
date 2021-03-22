@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rht/screens/checkout.dart';
 import '../screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +54,16 @@ class _ProfileBodyState extends State<ProfileBody> {
                   await SharedPreferences.getInstance();
               sharedPreferences.remove('phone');
               MyNavigator.goToLogin(context);
+            },
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: FlatButton(
+            child: Text('checkout'),
+            onPressed: () async {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => CheckOut()));
             },
           ),
         ),

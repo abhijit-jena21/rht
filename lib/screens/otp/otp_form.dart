@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:rht/my_navigator.dart';
+import 'package:rht/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../services/authservice.dart';
@@ -22,7 +23,8 @@ class OtpForm extends StatefulWidget {
   final String _number;
   final String _from;
   final String route;
-  const OtpForm(this._number, this._from, this.route);
+  final String _receivedId;
+  const OtpForm(this._number, this._from, this.route, this._receivedId);
 
   @override
   _OtpFormState createState() => _OtpFormState();
@@ -36,7 +38,7 @@ class _OtpFormState extends State<OtpForm> {
     color: const Color(0xFFFFFFFF),
     borderRadius: BorderRadius.circular(10.0),
     border: Border.all(
-      color: const Color(0xFFFFA751),
+      color: Color(0xFF2873F0),
     ),
   );
 
@@ -50,10 +52,17 @@ class _OtpFormState extends State<OtpForm> {
 
         if (res.result == 'The signUp authentication is successful!' ||
             res.result == 'The Login authentication is successful!') {
-          Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
           final SharedPreferences sharedPreferences =
               await SharedPreferences.getInstance();
           sharedPreferences.setString('phone', number);
+          await sharedPreferences.setString('userId', widget._receivedId);
+          finalId = widget._receivedId;
+          finalPhone = number;
+          print(finalPhone.toString());
+          // finalId = ;
+          // sharedPreferences.setString("userId",widget._receivedId);
+          Navigator.pushNamedAndRemoveUntil(
+              context, widget.route, (_) => false);
         } else if (res.error == 'OTP Did not Match!') {
           Fluttertoast.showToast(
               msg: 'Please enter correct OTP',
@@ -80,8 +89,7 @@ class _OtpFormState extends State<OtpForm> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
         child: PinPut(
             fieldsCount: 4,
-            textStyle:
-                const TextStyle(fontSize: 25.0, color: Color(0xFFFF4E00)),
+            textStyle: const TextStyle(fontSize: 25.0, color: Colors.black54),
             eachFieldWidth: 40.0,
             eachFieldHeight: 55.0,
             focusNode: _pinPutFocusNode,

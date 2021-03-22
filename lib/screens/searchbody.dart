@@ -65,7 +65,7 @@ class _SearchBodyState extends State<SearchBody> {
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   "Search results for \'${widget.query}\'",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black87),
                 ),
               ),
               FutureBuilder<List<Product>>(
@@ -86,7 +86,7 @@ class _SearchBodyState extends State<SearchBody> {
                               ),
                               Text(
                                 "Couldn't find anything",
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87),
                               ),
                             ],
                           )),

@@ -8,13 +8,14 @@ class OtpScreen extends StatelessWidget {
   final String _number;
   final String _from;
   final String _route;
-  OtpScreen(this._number, this._from, this._route);
+  final String receivedId;
+  OtpScreen(this._number, this._from, this._route, this.receivedId);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Color(0xFFFFA751)),
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         backgroundColor: Color(0xFFFFFFFF),
         elevation: 0,
         // title: Center(
@@ -22,7 +23,7 @@ class OtpScreen extends StatelessWidget {
         //   style: kLabelStyle,),
         // ),
       ),
-      body: Body(_number, _from, _route),
+      body: Body(_number, _from, _route, receivedId),
     );
   }
 }

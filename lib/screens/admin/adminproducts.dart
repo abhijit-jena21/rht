@@ -83,16 +83,16 @@ class _AdminProductsState extends State<AdminProducts>
             tabNumber: 4,
             tabs: [
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/tv.png?raw=true",
+                  "././assets/images/subcategory/tv.png",
                   "TVs"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/washing.png?raw=true",
+                  "././assets/images/subcategory/washing-machine.png",
                   "Washing\nMachine"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/refrigerator.png?raw=true",
+                  "././assets/images/subcategory/fridge.png",
                   "Refrigerators"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/ac.png?raw=true",
+                  "././assets/images/subcategory/ac.png",
                   "ACs"),
             ],
             tabBody: [
@@ -119,16 +119,16 @@ class _AdminProductsState extends State<AdminProducts>
             tabNumber: 4,
             tabs: [
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/console.jpg?raw=true",
+                  "././assets/images/subcategory/gamepad.png",
                   "Consoles"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/printer.png?raw=true",
+                  "././assets/images/subcategory/printer.png",
                   "Printers"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/camera.png?raw=true",
+                  "././assets/images/subcategory/camera.png",
                   "Cameras"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/monitor.png?raw=true",
+                  "././assets/images/subcategory/monitor.png",
                   "Monitors"),
             ],
             tabBody: [
@@ -155,25 +155,25 @@ class _AdminProductsState extends State<AdminProducts>
             tabNumber: 7,
             tabs: [
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/bed.png?raw=true",
+                  "./assets/images/subcategory/bed.png",
                   "Beds"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/sofa.png?raw=true",
+                  "./assets/images/subcategory/sofa.png",
                   "Sofas"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/mattress.png?raw=true",
+                  "././assets/images/subcategory/mattress.png",
                   "Mattresses"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/wardrobe.png?raw=true",
+                  "././assets/images/subcategory/wardrobe.png",
                   "Wardrobes"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/dressing%20table.png?raw=true",
+                  "././assets/images/subcategory/dressing-table.png",
                   "Dressing\nTable"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/office%20chair.png?raw=true",
+                  "././assets/images/subcategory/chair.png",
                   "Chairs"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/office%20table.png?raw=true",
+                  "././assets/images/subcategory/table.png",
                   "Tables"),
             ],
             tabBody: [
@@ -212,16 +212,16 @@ class _AdminProductsState extends State<AdminProducts>
             tabNumber: 4,
             tabs: [
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/dumb%20bell.png?raw=true",
+                  "././assets/images/subcategory/dumble.png",
                   "Gym\nEssentials"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/treadmill.png?raw=true",
+                  "././assets/images/subcategory/treadmill.png",
                   "Treadmills"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/exercise%20bike.png?raw=true",
+                  "././assets/images/subcategory/stationary-bike.png",
                   "Exercise Bikes"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/fitness%20bench.png?raw=true",
+                  "././assets/images/subcategory/bench-press.png",
                   "Fitness Bench"),
             ],
             tabBody: [
@@ -248,16 +248,16 @@ class _AdminProductsState extends State<AdminProducts>
             tabNumber: 4,
             tabs: [
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/bean%20bag.png?raw=true",
+                  "././assets/images/subcategory/bean-bag.png",
                   "Bean Bags"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/collapsible%20wardrobe.png?raw=true",
+                  "././assets/images/subcategory/wardrobe.png",
                   "Collapsible\nWardrobes"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/cabinet.png?raw=true",
+                  "././assets/images/subcategory/cabinet.png",
                   "Cabinets"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/bookshelf.png?raw=true",
+                  "././assets/images/subcategory/bookshelf.png",
                   "Bookshelves"),
             ],
             tabBody: [
@@ -284,13 +284,13 @@ class _AdminProductsState extends State<AdminProducts>
             tabNumber: 3,
             tabs: [
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/gas%20stove.png?raw=true",
+                  "././assets/images/subcategory/stove.png",
                   "Gas Stoves"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/kitchen%20rack.png?raw=true",
+                  "././assets/images/subcategory/book-rack.png",
                   "Kitchen Racks"),
               SubCategoryTab(
-                  "https://www.github.com/abhijit-jena21/image-repo/blob/main/micro%20wave.png?raw=true",
+                  "././assets/images/subcategory/microwave.png",
                   "Microwave"),
             ],
             tabBody: [
@@ -317,12 +317,12 @@ class _AdminProductsState extends State<AdminProducts>
               context, MaterialPageRoute(builder: (context) => AddProduct()));
         },
         label: Text("Add Product",
-        style: Theme.of(context).textTheme.headline3.copyWith(
+        style: Theme.of(context).textTheme.bodyText1.copyWith(
           color: Colors.white,
           fontWeight: FontWeight.bold),),
         backgroundColor: Theme.of(context).accentColor,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
     // );
   }

@@ -86,7 +86,7 @@ class _TabBodyState extends State<TabBody> {
                         ),
                         Text(
                           "Restocking soon...",
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87),
                         ),
                       ],
                     )),

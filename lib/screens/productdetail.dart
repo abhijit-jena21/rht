@@ -11,27 +11,17 @@ import '../utils/sliderutil.dart';
 import 'cart.dart';
 
 class ProductDetail extends StatefulWidget {
-  final String userId;
-  final String productId;
-  final String name;
-  final List<String> img;
-  final String details;
-  final int price;
-  final int rent;
-  final int duration;
-  final String locationId;
-  final List<String> items;
-  ProductDetail(this.userId, this.productId, this.name, this.img, this.details,
-      this.price, this.rent, this.duration, this.locationId, this.items);
+  final Product snapshot;
+  ProductDetail(this.snapshot);
 
   @override
-  _ProductDetailState createState() => _ProductDetailState(this.rent);
+  _ProductDetailState createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends State<ProductDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int calculatedRent;
-  _ProductDetailState(this.calculatedRent);
+  // _ProductDetailState(this.calculatedRent);
 
   Product product = new Product();
   // MySlider mySlider;
@@ -54,7 +44,10 @@ class _ProductDetailState extends State<ProductDetail> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black87),
+          style: Theme.of(context)
+              .textTheme
+              .bodyText2
+              .copyWith(color: Colors.black87),
         ),
       );
 
@@ -91,16 +84,16 @@ class _ProductDetailState extends State<ProductDetail> {
                   this.indexTop = newRent.toInt();
 
                   if (indexTop == 0) {
-                    calculatedRent = (widget.rent * 1.15).toInt();
+                    calculatedRent = (widget.snapshot.rent * 1.15).toInt();
                     duration = 3;
                   } else if (indexTop == 1) {
-                    calculatedRent = (widget.rent * 1.1).toInt();
+                    calculatedRent = (widget.snapshot.rent * 1.1).toInt();
                     duration = 6;
                   } else if (indexTop == 2) {
-                    calculatedRent = (widget.rent * 1.05).toInt();
+                    calculatedRent = (widget.snapshot.rent * 1.05).toInt();
                     duration = 12;
                   } else if (indexTop == 3) {
-                    calculatedRent = widget.rent;
+                    calculatedRent = widget.snapshot.rent;
                     duration = 24;
                   }
                 },
@@ -112,9 +105,9 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget imageCarousel(items) => Container(
-        height: 100.0,
+        height: 50.0,
         child: Carousel(
-          boxFit: BoxFit.contain,
+          boxFit: BoxFit.cover,
           images: items,
           animationCurve: Curves.fastOutSlowIn,
           animationDuration: Duration(milliseconds: 1000),
@@ -125,6 +118,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   void initState() {
     super.initState();
+    calculatedRent = widget.snapshot.rent;
     wishlistService.getWishlistedProducts(finalId).then((result) {
       if (this.mounted) {
         setState(() {
@@ -140,7 +134,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
     if (wishlistedProducts != null) {
       for (var index = 0; index < wishlistedProducts.length; index++) {
-        if (widget.productId == wishlistedProducts[index].sId) {
+        if (widget.snapshot.sId == wishlistedProducts[index].sId) {
           isFav = true;
           break;
         } else
@@ -148,7 +142,7 @@ class _ProductDetailState extends State<ProductDetail> {
       }
     }
     // calculatedRent = widget.rent;
-    widget.img.forEach((data) {
+    widget.snapshot.img.forEach((data) {
       images.add(NetworkImage(data));
     });
 
@@ -183,15 +177,16 @@ class _ProductDetailState extends State<ProductDetail> {
     Widget addToCart(BuildContext context) {
       Color conditionalColor;
       void Function() _onPressed;
-      print("locationid" + widget.locationId);
+      print("locationid" + widget.snapshot.locationid);
       // print("shared" + finalLocationId);
-      if (widget.items.length == 0 || (widget.locationId != finalLocationId)) {
+      if (widget.snapshot.itemsid.length == 0 ||
+          (widget.snapshot.locationid != finalLocationId)) {
         setState(() {
           conditionalColor = Colors.grey;
           print("i");
           _onPressed = null;
         });
-      } else if (widget.items.length > 0) {
+      } else if (widget.snapshot.itemsid.length > 0) {
         setState(() {
           print("am");
           conditionalColor = Theme.of(context).accentColor;
@@ -202,15 +197,15 @@ class _ProductDetailState extends State<ProductDetail> {
           _onPressed = () async {
             var response = await cartService.addToCart(
                 finalId,
-                widget.productId,
+                widget.snapshot.sId,
                 finalLocationId,
-                widget.name,
+                widget.snapshot.name,
                 1,
                 duration,
                 calculatedRent,
-                widget.img[0],
+                widget.snapshot.img[0],
                 finalDate,
-                1000);
+                widget.snapshot.deposit);
             print(response.toString());
             if (response.toString() == "New product added" ||
                 response.toString() == "Count of product increased")
@@ -222,16 +217,40 @@ class _ProductDetailState extends State<ProductDetail> {
         height: 40,
         width: MediaQuery.of(context).size.width * 0.4,
         child: RaisedButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           color: Theme.of(context).buttonColor,
           onPressed: _onPressed,
-          child: Text(
-            'ADD TO CART',
-            style: Theme.of(context).textTheme.button
-          ),
+          child: Text('ADD TO CART', style: Theme.of(context).textTheme.button),
         ),
       );
+    }
+
+    buildImage(int index){
+      return Container(
+                    margin: EdgeInsets.fromLTRB(20, 10, 5, 10),
+                    padding: EdgeInsets.all(20),
+                    height: 100,
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    decoration: BoxDecoration(
+                        // border: Border(),
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: images.elementAt(index) != null
+                                ? images.elementAt(index)
+                                : NetworkImage(
+                                    "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
+                    // child: NetworkImage(url: widget.img[0]),
+                  );
+    }
+
+    List<Widget> buildImageRow(){
+      List<Widget> imageBox = List<Widget>();
+      for(var i=0; i<widget.snapshot.img.length;i++)
+      {
+        imageBox.add(buildImage(i));
+      }
+      return imageBox;
     }
 
     return Scaffold(
@@ -248,12 +267,12 @@ class _ProductDetailState extends State<ProductDetail> {
           IconButton(
             icon: Icon(
               isFav ? Icons.favorite : Icons.favorite_border,
-              color: Color(0xFFEF7532),
+              color: Colors.red.shade400,
               // size: 18,
             ),
             onPressed: () async {
               isFavourite = await wishlistService.responseFromWishlist(
-                  finalId, widget.productId, isFav);
+                  finalId, widget.snapshot.sId, isFav);
               wishlistedProducts =
                   await wishlistService.getWishlistedProducts(finalId);
               print("2");
@@ -270,7 +289,7 @@ class _ProductDetailState extends State<ProductDetail> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.all(20),
-              height: 300,
+              height: 250,
               width: double.infinity,
               child: imageCarousel(images),
             ),
@@ -285,10 +304,11 @@ class _ProductDetailState extends State<ProductDetail> {
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 alignment: Alignment.centerLeft,
-                child: Text('${widget.name}',
+                child: Text('${widget.snapshot.name}',
                     overflow: TextOverflow.clip,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black87))),
-            if (widget.items.length == 0)
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        color: Colors.black87, fontWeight: FontWeight.bold))),
+            if (widget.snapshot.itemsid.length == 0)
               Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.center,
@@ -298,11 +318,11 @@ class _ProductDetailState extends State<ProductDetail> {
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
-            if (widget.locationId != finalLocationId)
+            if (widget.snapshot.locationid != finalLocationId)
               Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.center,
-                color: Colors.amber[100],
+                color: Colors.blue[100],
                 child: Text(
                   "This product isn't available in this city",
                   style: TextStyle(
@@ -327,12 +347,20 @@ class _ProductDetailState extends State<ProductDetail> {
                       Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text('₹ $calculatedRent',
-                            style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    color: Theme.of(context).accentColor,
+                                    fontWeight: FontWeight.bold)),
                       ),
                       Column(
                         children: [
                           Text('/month',
-                              style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black54)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .copyWith(color: Colors.black54)),
                           SizedBox(
                             height: 3,
                           )
@@ -345,7 +373,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   alignment: Alignment.centerRight,
                   width: MediaQuery.of(context).size.width * 0.4,
                   padding: EdgeInsets.fromLTRB(5, 10, 20, 10),
-                  child: Text('Deposit Amount:\n ₹ ${widget.price}',
+                  child: Text('Deposit Amount:\n ₹ ${widget.snapshot.deposit}',
                       textAlign: TextAlign.end,
                       style: Theme.of(context)
                           .textTheme
@@ -360,23 +388,40 @@ class _ProductDetailState extends State<ProductDetail> {
               height: 30,
               width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
-              child: Text("Free delivery in 72 hours",
-              style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black87),),
-              color: Colors.blue[100],
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(Icons.local_shipping),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "Free delivery in 72 hours",
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: Colors.black87),
+                ),
+              ]),
+              // color: Colors.blue[100],
             ),
-            SizedBox(height: 10,),
+            // SizedBox(
+            //   height: 10,
+            // ),
             // ],
             // ),m
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               width: double.infinity,
-              height: 20,
-              color: Colors.white,
+              height: 30,
+              color: Colors.grey.shade200,
               child: Text(
                 "How many months do you want to rent this for?",
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black87),
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .copyWith(color: Colors.black87),
               ),
             ),
             SizedBox(
@@ -388,12 +433,109 @@ class _ProductDetailState extends State<ProductDetail> {
             SizedBox(height: 10),
             Container(
               // height: 100,
+              color: Colors.blue.shade50,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
+              child: Text('Safety precautions during Covid-19',
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      color: Colors.black87,
+                      height: 1,
+                      fontWeight: FontWeight.bold)),
+            ),
+            Container(
+              // height: 100,
+              color: Colors.blue.shade50,
+              margin: EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.topLeft,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text('${widget.details}',
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black87)),
+              child: Text(
+                  'We\'re taking additional steps and measures to protect you from COVID-19',
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: Colors.black87, height: 1.2)),
             ),
-            
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: buildImageRow(),
+              // children: [
+              //   for (var i = 0; i < widget.snapshot.img.length;i++)
+              //   {
+              //     buildImage(i);
+              //   }
+              //     Container(
+              //       margin: EdgeInsets.fromLTRB(20, 10, 5, 10),
+              //       padding: EdgeInsets.all(20),
+              //       height: 100,
+              //       width: MediaQuery.of(context).size.width * 0.25,
+              //       decoration: BoxDecoration(
+              //           // border: Border(),
+              //           borderRadius: BorderRadius.circular(10),
+              //           image: DecorationImage(
+              //               fit: BoxFit.cover,
+              //               image: images.elementAt(0) != null
+              //                   ? images.elementAt(0)
+              //                   : NetworkImage(
+              //                       "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
+              //       // child: NetworkImage(url: widget.img[0]),
+              //     ),
+              //   Container(
+              //     margin: EdgeInsets.fromLTRB(10, 10, 5, 10),
+              //     padding: EdgeInsets.all(20),
+              //     height: 100,
+              //     width: MediaQuery.of(context).size.width * 0.25,
+              //     decoration: BoxDecoration(
+              //         // border: Border(),
+              //         borderRadius: BorderRadius.circular(10),
+              //         image: DecorationImage(
+              //             fit: BoxFit.cover,
+              //             image: images.elementAt(1) != null
+              //                 ? images.elementAt(1)
+              //                 : NetworkImage(
+              //                     "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
+              //     // child: NetworkImage(url: widget.img[0]),
+              //   ),
+              //   Container(
+              //     margin: EdgeInsets.fromLTRB(10, 10, 5, 10),
+              //     padding: EdgeInsets.all(20),
+              //     height: 100,
+              //     width: MediaQuery.of(context).size.width * 0.25,
+              //     decoration: BoxDecoration(
+              //         // border: Border(),
+              //         borderRadius: BorderRadius.circular(10),
+              //         image: DecorationImage(
+              //             fit: BoxFit.cover,
+              //             image: images.elementAt(2) != null
+              //                 ? images.elementAt(2)
+              //                 : NetworkImage(
+              //                     "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
+              //     // child: NetworkImage(url: widget.img[0]),
+              //   ),
+              // ],
+            ),
+            Container(
+              // height: 100,
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text('Product Details',
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      color: Colors.black87,
+                      height: 1.5,
+                      fontWeight: FontWeight.bold)),
+            ),
+            Container(
+              // height: 100,
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text('${widget.snapshot.details}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: Colors.black87, height: 1.5)),
+            ),
+
             SizedBox(
               height: 70,
             )
@@ -403,13 +545,14 @@ class _ProductDetailState extends State<ProductDetail> {
       bottomSheet: Container(
         color: Color(0Xfff2f2f2),
         width: double.infinity,
-        height: 50,
+        height: 70,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   height: 20,
@@ -417,8 +560,9 @@ class _ProductDetailState extends State<ProductDetail> {
                   child: Text(
                     '₹$calculatedRent/month',
                     style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 16,
                         color: Colors.black,
+                        fontWeight: FontWeight.bold,
                         fontFamily: "Montserrat"),
                   ),
                 ),
@@ -426,10 +570,12 @@ class _ProductDetailState extends State<ProductDetail> {
                   height: 20,
                   width: MediaQuery.of(context).size.width * 0.4,
                   child: Text(
-                    'Refundable Deposit ₹${widget.price}',
+                    'Deposit: ₹${widget.snapshot.deposit}',
                     style: TextStyle(
-                        fontSize: 10,
+                        height: 2,
+                        fontSize: 12,
                         color: Colors.black,
+                        fontWeight: FontWeight.bold,
                         fontFamily: "Montserrat"),
                   ),
                 ),

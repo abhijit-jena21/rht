@@ -25,14 +25,20 @@ class _LocationPickerState extends State<LocationPicker> {
   // _location=widget.location;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).buttonColor,
-      width: double.infinity,
-      height: 25,
-      child: FlatButton(
+    return ClipRect(
+      clipBehavior: Clip.antiAlias,
+      child: FlatButton.icon(
+        padding: EdgeInsets.zero,
         height: 25,
-        minWidth: double.infinity,
-        child: Text('$_location', style: Theme.of(context).textTheme.bodyText2),
+        icon: Icon(
+          Icons.location_on,
+          color: Colors.yellow,
+          size: 20,
+        ),
+        // minWidth: double.infinity,
+        label: Text('$_location',
+            style: Theme.of(context).textTheme.bodyText2 ,
+            overflow: TextOverflow.ellipsis),
         onPressed: () => _onButtonPressed(),
       ),
     );
@@ -43,9 +49,6 @@ class _LocationPickerState extends State<LocationPicker> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Location(userId: widget.userId))
-    );
-        
+            builder: (context) => Location(userId: widget.userId)));
   }
-
 }

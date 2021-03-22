@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:rht/models/cartproduct.dart';
 import 'package:rht/screens/splash_screen.dart';
@@ -129,7 +131,8 @@ class CartService {
   Future<String> respondStock(userid) async {
     Response response = await checkStock(userid);
     // print(response.data);
-    var responseData = response.data;
+    var responseData = json.decode(response.data);
+
     return responseData;
   }
 

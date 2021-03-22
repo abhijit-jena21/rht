@@ -47,7 +47,7 @@ class _MyTabState extends State<MyTab>
               isScrollable: true,
               indicatorWeight: 2.0,
               indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: Color(0xffffffff),
+              indicatorColor: Colors.yellow,
               unselectedLabelColor: Colors.grey[700],
               labelColor: Theme.of(context).primaryColor,
               tabs: widget.tabs,

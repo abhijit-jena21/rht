@@ -15,7 +15,7 @@ class Location extends StatelessWidget {
         AssetImage assetImage, String location, String locationId) {
       Image image = Image(
         image: assetImage,
-        // width: 50.0,
+        width: 160.0,
         height: 60.0,
         // color: Theme.of(context).primaryColor,
         fit: BoxFit.cover,

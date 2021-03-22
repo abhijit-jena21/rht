@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:dio/dio.dart';
+import 'package:rht/screens/productdetailbuilder.dart';
 
 import '../models/product.dart';
 import '../screens/splash_screen.dart';
@@ -17,11 +18,12 @@ class ProductCard extends StatefulWidget {
   final String details;
   final int price;
   final int rent;
+  final int deposit;
   final int duration;
   final String locationId;
   final List<String> items;
   ProductCard(this.userId, this.productId, this.name, this.img, this.details,
-      this.price, this.rent, this.duration, this.items, this.locationId);
+      this.price, this.rent, this.deposit, this.duration, this.items, this.locationId);
   @override
   _ProductCardState createState() => _ProductCardState();
 }
@@ -70,18 +72,7 @@ class _ProductCardState extends State<ProductCard> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProductDetail(
-                        widget.userId,
-                        widget.productId,
-                        widget.name,
-                        widget.img,
-                        widget.details,
-                        widget.price,
-                        widget.rent,
-                        widget.duration,
-                        widget.locationId,
-                        widget.items
-                        )));
+                      builder: (context) => ProductDetailBuilder(widget.productId)));
             },
             child: Container(
                 decoration: BoxDecoration(
@@ -115,41 +106,12 @@ class _ProductCardState extends State<ProductCard> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
                             decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(5)),
                                 image: DecorationImage(
                                     image: NetworkImage(widget.img[0]),
-                                    fit: BoxFit.contain))),
-                        Positioned(
-                          top: 5,
-                          right: 10,
-                          child: SizedBox(
-                            height: 25,
-                            width: 25,
-                            child: FlatButton(
-                              padding: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              color: Colors.white,
-                              onPressed: () async {
-                                isFavourite =
-                                    await wishlistService.responseFromWishlist(
-                                        finalId, widget.productId, isFav);
-                                wishlistedProducts = await wishlistService
-                                    .getWishlistedProducts(widget.userId);
-                                print("2");
-
-                                print("sss" + isFavourite.toString());
-                                setState(() {
-                                  isFav = isFavourite;
-                                });
-                              },
-                              child: Icon(
-                                isFav ? Icons.favorite : Icons.favorite_border,
-                                color: Colors.red.shade400,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ),
+                                    fit: BoxFit.cover))),
                         if (widget.items.length == 0)
                           Positioned(
                             bottom: 5,
@@ -171,28 +133,69 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ),
                   SizedBox(height: 7.0),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 10),
-                    height: 20,
-                    child: Text(widget.name,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: Color(0xFF575E67),
-                            // fontFamily: 'Varela',
-                            fontSize: 12.0)),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 10),
-                    height: 20,
-                    child: Text("₹ " + widget.rent.toString() + '/month',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            // fontFamily: 'Varela',
-                            fontSize: 12.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(left: 10),
+                            height: 20,
+                            child: Text(widget.name,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Color(0xFF575E67),
+                                    // fontFamily: 'Varela',
+                                    fontSize: 12.0)),
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(left: 10),
+                            height: 20,
+                            child:
+                                Text("₹ " + widget.rent.toString() + '/month',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Theme.of(context).accentColor,
+                                        // fontFamily: 'Varela',
+                                        fontSize: 12.0)),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: FlatButton(
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                          color: Colors.white,
+                          onPressed: () async {
+                            isFavourite =
+                                await wishlistService.responseFromWishlist(
+                                    finalId, widget.productId, isFav);
+                            wishlistedProducts = await wishlistService
+                                .getWishlistedProducts(widget.userId);
+                            print("2");
+
+                            print("sss" + isFavourite.toString());
+                            setState(() {
+                              isFav = isFavourite;
+                            });
+                          },
+                          child: Icon(
+                            isFav ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.red.shade400,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ]))));
   }

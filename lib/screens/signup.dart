@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
+import 'package:rht/screens/cart.dart';
+import 'package:rht/screens/splash_screen.dart';
 
 import '../my_navigator.dart';
 import '../utils/constants.dart';
 import '../services/authservice.dart';
 import 'otp/otp_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class Res {
@@ -23,7 +26,8 @@ class Res {
 class SignupScreen extends StatefulWidget {
   final String phone;
   final String _route;
-  SignupScreen(this.phone, this._route);
+  final String _receivedId;
+  SignupScreen(this.phone, this._route, this._receivedId);
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -46,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return InputDecoration(
       contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFFFA751), width: 2.0),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       enabledBorder: OutlineInputBorder(
@@ -58,11 +62,11 @@ class _SignupScreenState extends State<SignupScreen> {
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFFFA751), width: 2.0),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       border: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFFFA751), width: 2.0),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       prefixIcon: Icon(
@@ -81,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
       children: <Widget>[
         Text(
           'Name',
-          style: kLabelStyle,
+          style: Theme.of(context).textTheme.bodyText1.copyWith(color: Theme.of(context).primaryColor)
         ),
         SizedBox(height: 10.0),
         TextFormField(
@@ -118,7 +122,7 @@ class _SignupScreenState extends State<SignupScreen> {
       children: <Widget>[
         Text(
           'Address',
-          style: kLabelStyle,
+          style: Theme.of(context).textTheme.bodyText1.copyWith(color: Theme.of(context).primaryColor),
         ),
         SizedBox(height: 10.0),
         TextFormField(
@@ -153,7 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
       children: <Widget>[
         Text(
           'Email',
-          style: kLabelStyle,
+          style: Theme.of(context).textTheme.bodyText1.copyWith(color: Theme.of(context).primaryColor),
         ),
         SizedBox(height: 10.0),
         TextFormField(
@@ -190,7 +194,7 @@ class _SignupScreenState extends State<SignupScreen> {
       children: <Widget>[
         Text(
           'Phone no',
-          style: kLabelStyle,
+          style: Theme.of(context).textTheme.bodyText1.copyWith(color: Theme.of(context).primaryColor),
         ),
         SizedBox(height: 10.0),
         TextFormField(
@@ -229,8 +233,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
       _phno = "+91" + _phno;
       // print(_phno);
-      await AuthService().signUp(_name, _email, _phno, _addr).then(
-        (val) {
+      await AuthService()
+          .signUp(_name, _email, _phno, _addr, widget._receivedId)
+          .then(
+        (val) async {
           print(val);
           final Map parsed = json.decode(val.toString());
           final res = Res.fromJson(parsed);
@@ -238,11 +244,20 @@ class _SignupScreenState extends State<SignupScreen> {
 
           if (res.result == 'Phone Authentication Required!') {
             myNavigator = MyNavigator(_phno, _from);
+            final SharedPreferences sharedPreferences =
+                await SharedPreferences.getInstance();
+            sharedPreferences.setString('address', _addr);
+            finalAddress = _addr;
+            sharedPreferences.setString('name', _name);
+            finalName = _name;
+            sharedPreferences.setString('email', _email);
+            finalEmail = _email;
+
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        OtpScreen(_phno, _from, widget._route)));
+                    builder: (context) => OtpScreen(
+                        _phno, _from, widget._route, widget._receivedId)));
           }
           if (res.result == 'Phone Number already Registered!!') {
             Fluttertoast.showToast(
@@ -263,14 +278,14 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
-        elevation: 3.0,
+        // elevation: 3.0,
         // onPressed: () => MyNavigator.goToOtp(context),
         onPressed: formSubmit,
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(5.0),
         ),
-        color: Color(0xFFFFA751),
+        color: Theme.of(context).accentColor,
         child: Text(
           'Sign Me Up',
           style: TextStyle(
@@ -317,7 +332,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget _buildSkipBtn() {
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context)=>Cart(userId: finalId,)),
+        (_)=>false),
       child: RichText(
         text: TextSpan(
           children: [
@@ -325,7 +343,7 @@ class _SignupScreenState extends State<SignupScreen> {
               text: 'Back',
               style: TextStyle(
                 fontFamily: 'Montserrat',
-                color: Color(0xFFFF4E00),
+                color: Color(0xFF343434),
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -376,7 +394,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         '\nLet\'s get you started ',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.brown,
+                          color: Colors.black87,
                           fontFamily: 'Montserrat',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
@@ -402,7 +420,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       SizedBox(height: 10.0),
                       // _buildRememberMeCheckbox(),
                       _buildSignBtn(),
-                      _buildLoginpBtn(),
+                      // _buildLoginpBtn(),
                       SizedBox(height: 20.0),
                       _buildSkipBtn(),
                     ],

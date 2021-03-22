@@ -72,7 +72,7 @@ class _SubCategoriesState extends State<SubCategories> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: MyAppBar(),
+        // appBar: MyAppBar(),
         body: Container(
           height: size.height,
           child: Column(

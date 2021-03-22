@@ -1,20 +1,31 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:rht/screens/cart.dart';
+import 'package:rht/screens/splash_screen.dart';
 import '../screens/signup.dart';
 import '../screens/otp/otp_screen.dart';
 
 import '../utils/constants.dart';
 import '../my_navigator.dart';
 import '../services/authservice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Res {
-  String error;
-  String result;
+  String sId;
+  String phone;
+  String name;
+  String address;
+  String email;
 
-  Res({this.error, this.result});
+  Res({this.sId, this.phone, this.name, this.address, this.email});
 
   factory Res.fromJson(Map<String, dynamic> json) {
-    return Res(error: json['error'], result: json['result']);
+    return Res(
+        sId: json['userid'],
+        phone: json['contact'],
+        name: json['name'],
+        address: json['address'],
+        email: json['email']);
   }
 }
 
@@ -37,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return InputDecoration(
       contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFFFA751), width: 2.0),
+        borderSide:
+            BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       enabledBorder: OutlineInputBorder(
@@ -49,17 +61,19 @@ class _LoginScreenState extends State<LoginScreen> {
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFFFA751), width: 2.0),
+        borderSide:
+            BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       border: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFFFA751), width: 2.0),
+        borderSide:
+            BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       prefixIcon: Icon(
         icon,
         // Icons.account_box_outlined,
-        color: Color(0xFFFFA751),
+        color: Theme.of(context).primaryColor,
       ),
       hintText: title,
       hintStyle: kHintTextStyle,
@@ -72,7 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
       children: <Widget>[
         Text(
           'Phone no',
-          style: kLabelStyle,
+          style: Theme.of(context)
+              .textTheme
+              .bodyText1
+              .copyWith(color: Theme.of(context).primaryColor),
         ),
         SizedBox(height: 10.0),
         TextFormField(
@@ -106,27 +123,53 @@ class _LoginScreenState extends State<LoginScreen> {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      _phno = "+91" + _phno;
+      var phno = "+91" + _phno;
       // print(_phno);
-      await AuthService().login(_phno).then(
+      await AuthService().login(_phno, finalId).then(
         (val) async {
           print(val);
           final Map parsed = json.decode(val.toString());
           final res = Res.fromJson(parsed);
-          print(res.result);
+          print(res.sId);
 
-          if (res.result == 'Welcome Buddy,Enter Otp!') {
+          if (res.sId != finalId) {
             myNavigator = MyNavigator(_phno, _from);
             // myNavigator.goToOtp(context);
-            // final SharedPreferences sharedPreferences =
-            //     await SharedPreferences.getInstance();
-            // sharedPreferences.setString('phone', _phno);
+            final SharedPreferences sharedPreferences =
+                await SharedPreferences.getInstance();
+            sharedPreferences.setString('address', res.address);
+            finalAddress = res.address;
+            sharedPreferences.setString('name', res.name);
+            finalName = res.name;
+            sharedPreferences.setString('email', res.email);
+            finalEmail = res.email;
 
-            Navigator.push(context,
-        MaterialPageRoute(builder: (context) =>OtpScreen(_phno, _from, widget._route)));
-          } else if (res.result == 'Not Registered!') {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SignupScreen(_phno, widget._route)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        OtpScreen(phno, _from, widget._route, res.sId)));
+          } else if (res.sId == finalId && res.name == "guest") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SignupScreen(_phno, widget._route, res.sId)));
+            // MyNavigator.goToOtp(context);
+          } else if (res.sId == finalId && res.name != "guest") {
+            final SharedPreferences sharedPreferences =
+                await SharedPreferences.getInstance();
+            sharedPreferences.setString('address', res.address);
+            finalAddress = res.address;
+            sharedPreferences.setString('name', res.name);
+            finalName = res.name;
+            sharedPreferences.setString('email', res.email);
+            finalEmail = res.email;
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        OtpScreen(phno, _from, widget._route, res.sId)));
             // MyNavigator.goToOtp(context);
           }
         },
@@ -139,13 +182,13 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
-        elevation: 3.0,
+        // elevation: 3.0,
         onPressed: formSubmit,
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(5.0),
         ),
-        color: Color(0xFFFFA751),
+        color: Theme.of(context).accentColor,
         child: Text(
           'Log Me In',
           style: TextStyle(
@@ -192,7 +235,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSkipBtn() {
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () {
+        if (widget._route == "/checkout")
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Cart(
+                        userId: finalId,
+                      )),
+              (_) => false);
+        else if (widget._route == "/profile") Navigator.pop(context);
+      },
       child: RichText(
         text: TextSpan(
           children: [
@@ -200,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Back',
               style: TextStyle(
                 fontFamily: 'Montserrat',
-                color: Color(0xFFFF4E00),
+                color: Color(0xFF343434),
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -251,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Hello.\nWelcome to RHT.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.brown,
+                              color: Colors.blue.shade600,
                               fontFamily: 'Montserrat',
                               fontSize: 30.0,
                               fontWeight: FontWeight.bold,
@@ -260,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: 30.0),
                           _buildphoneno(),
                           _buildLogBtn(),
-                          _buildSignupBtn(),
+                          // _buildSignupBtn(),
                           SizedBox(
                             height: 30.0,
                           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './screens/myprofile/userprofile.dart';
+// import './screens/myprofile/userprofile.dart';
 import './screens/checkout.dart';
 import './screens/location.dart';
 // import 'package:flutter/services.dart';
@@ -8,7 +8,6 @@ import './utils/theme.dart';
 
 // import './screens/starter.dart';
 import './screens/splash_screen.dart';
-import './screens/login.dart';
 // import './screens/products.dart';
 // import './screens/home.dart';
 
@@ -16,7 +15,7 @@ var routes = <String, WidgetBuilder>{
   // "/signup": (BuildContext context) => SignupScreen(),
   // "/otp": (BuildContext context) => OtpScreen(),
   // "/login": (BuildContext context) => LoginScreen(),
-  "/profile": (BuildContext context) => Starter(),
+  "/profile": (BuildContext context) => Starter(location: finalLocation, locationId: finalLocationId, userId: finalId, ),
   "/home": (BuildContext context) => Starter(),
   "/checkout":(BuildContext context) => CheckOut(),
   "/location": (BuildContext context) => Location()

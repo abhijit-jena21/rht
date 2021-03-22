@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:rht/screens/address.dart';
+import 'package:rht/screens/splash_screen.dart';
+import 'package:rht/screens/success.dart';
+import 'package:rht/services/checkoutservice.dart';
+
+import 'cart.dart';
 
 class CheckOut extends StatefulWidget {
   @override
   _CheckOutState createState() => _CheckOutState();
 }
 
+enum PaymentMethod { COD }
+
 class _CheckOutState extends State<CheckOut> {
+  PaymentMethod _method = PaymentMethod.COD;
+  CheckoutService _checkoutService = CheckoutService();
   int _currentStep = 0;
+  final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
+
   List<Step> _mySteps() {
     List<Step> _steps = [
       Step(
-        title: Text(
-          "Confirm Address",
-          style: Theme.of(context)
-              .textTheme
-              .headline3
-              .copyWith(fontWeight: FontWeight.bold),
-        ),
-        content: TextFormField(
-          keyboardType: TextInputType.name,
-          maxLines: 5,
-          textCapitalization: TextCapitalization.words,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: Theme.of(context).textTheme.headline3,
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            // filled: true,
-            hintText: 'Enter product details',
-            labelText: 'Details *',
-          ),
-          onSaved: (String value) {
-            // this._details = value;
-            // print('details=$_details');
-          },
-          // validator: _validateText,
-        ),
+        title: Text("Confirm Address",
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Theme.of(context).accentColor)),
+        content: AddressForm(_formKey2),
         isActive: _currentStep >= 0,
       ),
       Step(
@@ -42,21 +36,27 @@ class _CheckOutState extends State<CheckOut> {
           "Select Payment Method",
           style: Theme.of(context)
               .textTheme
-              .headline3
-              .copyWith(fontWeight: FontWeight.bold),
+              .bodyText1
+              .copyWith(color: Theme.of(context).accentColor),
         ),
-        content: TextField(),
-        isActive: _currentStep >= 0,
-      ),
-      Step(
-        title: Text(
-          "Add Stock",
-          style: Theme.of(context)
-              .textTheme
-              .headline3
-              .copyWith(fontWeight: FontWeight.bold),
+        content: ListTile(
+          title: Text(
+            "Cash on Delivery",
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: Colors.black87),
+          ),
+          leading: Radio(
+            value: PaymentMethod.COD,
+            groupValue: _method,
+            onChanged: (PaymentMethod value) {
+              setState(() {
+                _method = value;
+              });
+            },
+          ),
         ),
-        content: TextField(),
         isActive: _currentStep >= 0,
       ),
     ];
@@ -65,47 +65,140 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
+    void _submitDetails() async {
+      final FormState formState = _formKey.currentState;
+
+      void showSnackBarMessage(String message,
+          [MaterialColor color = Colors.red]) {
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+      }
+
+      if (!formState.validate()) {
+        showSnackBarMessage('Please enter correct data');
+      } else {
+        formState.save();
+        await CheckoutService().checkOut(finalId).whenComplete((){
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Success()), (_)=>false);
+        });
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Checkout",
           style: Theme.of(context)
               .textTheme
-              .bodyText1
+              .headline6
               .copyWith(color: Theme.of(context).accentColor),
         ),
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Cart(
+                          userId: finalId,
+                        )),
+                (_) => false);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      body: Stepper(
-        steps: _mySteps(),
-        currentStep: this._currentStep,
-        onStepTapped: (step) {
-          setState(() {
-            this._currentStep = step;
-          });
-        },
-        onStepContinue: () {
-          setState(() {
-            if (this._currentStep < this._mySteps().length - 1) {
-              this._currentStep = this._currentStep + 1;
-            } else {}
-          });
-        },
-        onStepCancel: () {
-          setState(() {
-            if (this._currentStep > 0) {
-              this._currentStep = this._currentStep - 1;
-            } else {
-              this._currentStep = 0;
-            }
-          });
-        },
+      body: Container(
+        child: Form(
+          key: _formKey,
+          child: ListView(children: [
+            Stepper(
+              controlsBuilder:
+                  // ignore: missing_return
+                  (BuildContext context,
+                      {VoidCallback onStepContinue,
+                      VoidCallback onStepCancel}) {
+                if (this._currentStep < this._mySteps().length - 1)
+                  return Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        elevation: 0,
+                        color: Theme.of(context).primaryColor,
+                        onPressed: onStepContinue,
+                        child: Text(
+                          'NEXT',
+                          style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              letterSpacing: 1.2,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      TextButton(
+                        onPressed: onStepCancel,
+                        child: const Text('CANCEL'),
+                      ),
+                    ],
+                  );
+                else
+                  return Row(
+                    children: [
+                      Container(
+                        child: null,
+                      ),
+                      Container(
+                        child: null,
+                      )
+                    ],
+                  );
+              },
+              steps: _mySteps(),
+              currentStep: this._currentStep,
+              onStepTapped: (step) {
+                setState(() {
+                  this._currentStep = step;
+                });
+              },
+              onStepContinue: () {
+                setState(() {
+                  if (_formKey2.currentState.validate()) {
+                    if (this._currentStep < this._mySteps().length - 1) {
+                      this._currentStep = this._currentStep + 1;
+                    } else {}
+                  }
+                });
+              },
+              onStepCancel: () {
+                setState(() {
+                  if (this._currentStep > 0) {
+                    this._currentStep = this._currentStep - 1;
+                  } else {
+                    this._currentStep = 0;
+                  }
+                });
+              },
+            ),
+          ]),
+        ),
+      ),
+      bottomSheet: Container(
+        color: Color(0Xfff2f2f2),
+        width: double.infinity,
+        height: 50,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        child: FlatButton(
+          child: Text(
+            'Proceed to Rent',
+            style: Theme.of(context).textTheme.button,
+          ),
+          onPressed: _submitDetails,
+          color: Theme.of(context).buttonColor,
+        ),
       ),
     );
   }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rht/screens/myprofile/profilenew.dart';
 import '../screens/splash_screen.dart';
 import '../widgets/navigationbar.dart';
 // import '../screens/departments.dart';
 import '../screens/products/products.dart';
 import './landingpage/landingpage.dart';
 import '../screens/wishlist.dart';
-import 'myprofile/drawer_bloc.dart';
-import 'myprofile/drawer_layout.dart';
 
 class Starter extends StatefulWidget {
   final String location;
@@ -81,10 +80,7 @@ class _StarterState extends State<Starter> {
         userId: widget.userId,
         // onButtonTapped: onButtonTapped2,
       ),
-      BlocProvider<DrawerBloc>(
-        create: (context) => DrawerBloc(),
-        child: DrawerLayout(),
-      ),
+      ProfileSecondPage()
     ];
     return Scaffold(
         body: PageView(

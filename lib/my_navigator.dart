@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './screens/subcategories.dart';
-import './screens/otp/otp_screen.dart';
 
 class MyNavigator {
   String number;

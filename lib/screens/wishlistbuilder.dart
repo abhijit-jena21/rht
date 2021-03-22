@@ -42,15 +42,7 @@ class _WishlistBuilderState extends State<WishlistBuilder> {
           widget.onButtonTapped,
           index,
           refresh,
-          widget.snapshot[index].sId,
-          widget.snapshot[index].name,
-          widget.snapshot[index].img,
-          widget.snapshot[index].details,
-          widget.snapshot[index].price,
-          widget.snapshot[index].rent,
-          widget.snapshot[index].duration,
-          widget.snapshot[index].itemsid,
-          widget.snapshot[index].locationid
+          widget.snapshot[index]
         );
       },
     );

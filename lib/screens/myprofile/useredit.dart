@@ -1,6 +1,22 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rht/services/authservice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../splash_screen.dart';
+
+class Res {
+  String error;
+  String result;
+
+  Res({this.error, this.result});
+
+  factory Res.fromJson(Map<String, dynamic> json) {
+    return Res(error: json['error'], result: json['result']);
+  }
+}
 
 class CreatProfile extends StatefulWidget {
   CreatProfile({Key key}) : super(key: key);
@@ -12,44 +28,89 @@ class CreatProfile extends StatefulWidget {
 class _CreatProfileState extends State<CreatProfile> {
   bool circular = false;
   PickedFile _imageFile;
-  final _globalkey = GlobalKey<FormState>();
-   final ImagePicker _picker = ImagePicker();
+  String _name;
+  String _address;
+  String _email;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
+
+  void formSubmit() async {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      // print(_phno);
+      await AuthService()
+          .useredit(
+        finalId,
+        _name,
+        _address,
+        _email,
+      )
+          .then(
+        (val) async {
+          print(val);
+          final Map parsed = json.decode(val.toString());
+          final res = Res.fromJson(parsed);
+          print(res.result);
+
+          if (res.result == 'Details successfully updated!') {
+            // myNavigator = MyNavigator(_phno, _from);
+            final SharedPreferences sharedPreferences =
+                await SharedPreferences.getInstance();
+            setState(() {
+              sharedPreferences.setString('address', _address);
+              finalAddress = _address;
+              sharedPreferences.setString('name', _name);
+              finalName = _name;
+              sharedPreferences.setString('email', _email);
+              finalEmail = _email;
+            });
+
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/profile', (_) => false);
+          }
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      appBar:AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Color(0xFFFFA751),
-    elevation: 0,
-    leading: IconButton(
-                      onPressed: () {Navigator.pop(context);},
-                      icon: Container(
-                        child: Center(child: Icon(Icons.arrow_back_rounded)),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                        ),
-                      ),
-                    ), 
-   centerTitle:true,
-    title:
-     Text(
-      'Edit Profile',
-      style: TextStyle(fontSize: 20, color: Colors.white),
-    ),
-    ),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).primaryColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Container(
+            child: Center(child: Icon(Icons.arrow_back_rounded)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+          ),
+        ),
+        centerTitle: true,
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ),
       body: Form(
-        key: _globalkey,
+        key: _formKey,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           children: <Widget>[
-            imageProfile(),
+            /* imageProfile(),
             SizedBox(
               height: 20,
-            ),
+            ),*/
             nameTextField(),
             SizedBox(
               height: 20,
@@ -62,16 +123,16 @@ class _CreatProfileState extends State<CreatProfile> {
             SizedBox(
               height: 20,
             ),
-            
             InkWell(
-              onTap: (){
+              onTap: () {
+                formSubmit();
               },
               child: Center(
                 child: Container(
                   width: 200,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFA751),
+                    color: Theme.of(context).accentColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -95,7 +156,7 @@ class _CreatProfileState extends State<CreatProfile> {
     );
   }
 
-  Widget imageProfile() {
+  /*Widget imageProfile() {
     return Center(
       child: Stack(children: <Widget>[
         CircleAvatar(
@@ -179,10 +240,13 @@ class _CreatProfileState extends State<CreatProfile> {
       _imageFile = pickedFile;
     });
   }
-
+*/
   Widget nameTextField() {
     return TextFormField(
-     // controller: _name,
+      // controller: _name,
+      initialValue: finalName,
+      style:
+          Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black87),
       validator: (value) {
         if (value.isEmpty) return "Name can't be empty";
 
@@ -195,23 +259,29 @@ class _CreatProfileState extends State<CreatProfile> {
         )),
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.orange,
+          color: Colors.blue,
           width: 2,
         )),
         prefixIcon: Icon(
           Icons.person,
-          color: Color(0xFFFFA751),
+          color: Theme.of(context).accentColor,
         ),
         labelText: "Name",
         // helperText: "Name can't be empty",
         // hintText: "Enter your name",
       ),
+      onSaved: (value) {
+        _name = value;
+      },
     );
   }
 
   Widget addressTextField() {
     return TextFormField(
       //controller: _profession,
+      initialValue: finalAddress,
+      style:
+          Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black87),
       validator: (value) {
         if (value.isEmpty) return "Address can't be empty";
 
@@ -224,23 +294,29 @@ class _CreatProfileState extends State<CreatProfile> {
         )),
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.orange,
+          color: Colors.blue,
           width: 2,
         )),
         prefixIcon: Icon(
           Icons.house,
-          color: Color(0xFFFFA751),
+          color: Theme.of(context).accentColor,
         ),
         labelText: "Address",
         // helperText: "Address can't be empty",
         // hintText: "Enter your house Address",
       ),
+      onSaved: (value) {
+        _address = value;
+      },
     );
   }
 
   Widget emailField() {
     return TextFormField(
       //controller: _dob,
+      initialValue: finalEmail,
+      style:
+          Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black87),
       validator: (value) {
         if (value.isEmpty) return "Email can't be empty";
 
@@ -253,19 +329,21 @@ class _CreatProfileState extends State<CreatProfile> {
         )),
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.orange,
+          color: Colors.blue,
           width: 2,
         )),
         prefixIcon: Icon(
           Icons.mail,
-          color: Color(0xFFFFA751),
+          color: Theme.of(context).accentColor,
         ),
         labelText: "Email",
         // helperText: "Provide DOB on dd/mm/yyyy",
         // hintText: "01/01/2020",
       ),
+      onSaved: (value) {
+        _email = value;
+      },
     );
   }
 
-  
 }

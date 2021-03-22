@@ -11,8 +11,9 @@ class Body extends StatelessWidget {
   String _number;
   String _from;
   String _route;
+  String _receivedId;
   Dio dio = new Dio();
-  Body(this._number, this._from, this._route);
+  Body(this._number, this._from, this._route, this._receivedId);
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,16 +27,16 @@ class Body extends StatelessWidget {
               SizedBox(height: SizeConfig.screenHeight * 0.05),
               Text(
                 "OTP Verification",
-                style: kLabelStyle,
+                style: Theme.of(context).textTheme.headline6.copyWith(color: Theme.of(context).primaryColor),
               ),
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
                   child: Text("We sent your code to your phone no.",
-                      style: Theme.of(context).textTheme.headline3)),
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54))),
               // Container(
               //   padding: EdgeInsets.symmetric(horizontal: 5,vertical: 20),
               //   child: buildTimer()),
-              OtpForm(_number, _from, _route),
+              OtpForm(_number, _from, _route, _receivedId),
               SizedBox(height: SizeConfig.screenHeight * 0.1),
               GestureDetector(
                 onTap: () async {
@@ -45,7 +46,7 @@ class Body extends StatelessWidget {
                   "Resend OTP Code",
                   style: TextStyle(
                       decoration: TextDecoration.underline,
-                      color: Color(0xFFFFA751),
+                      color: Theme.of(context).primaryColor,
                       fontSize: 15),
                 ),
               )

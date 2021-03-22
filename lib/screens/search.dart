@@ -53,7 +53,7 @@ class Search extends SearchDelegate<String> {
       itemBuilder: (context, index) => ListTile(
         title: Text(
           suggestions[index],
-          style: Theme.of(context).textTheme.headline3,
+          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87),
         ),
       ),
       itemCount: suggestions.length,

@@ -34,11 +34,12 @@ class _WishlistState extends State<Wishlist> {
             child: Column(
           children: [
             Container(
+              
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Text(
-                "Wishlist",
-                style: Theme.of(context).textTheme.bodyText1,
+                "My Wishlist",
+                style: Theme.of(context).textTheme.headline6.copyWith(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold),
               ),
             ),
             FutureBuilder<List<Product>>(

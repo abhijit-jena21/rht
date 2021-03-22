@@ -38,14 +38,13 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
     Material myItems(AssetImage assetImage, String title, int ind) {
       Image image = Image(
         image: assetImage,
-        width: 40.0,
-        color: Color(0xff2873f0),
+        width: 100.0,
+        height: 70,
+        fit: BoxFit.cover,
+        // color: Color(0xff2873f0),
       );
       return Material(
           color: Colors.white,
-          // elevation: 0.5,
-          // shadowColor: Theme.of(context).primaryColor,
-          // borderRadius: BorderRadius.circular(10.0),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)), 
           side: BorderSide(width: 0.2, color: Colors.black38)
           ),
@@ -55,29 +54,9 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
               setState(() {
                 tabIndex = ind;
               });
-              // Navigator.pushNamed(context, 'products');
               widget.onButtonTapped(1, tabIndex, widget.locationId);
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => Products(
-              //               index: tabIndex,
-              //               locationId: widget.locationId,
-              //               userId: widget.userId,
-              //             )));
               print(":" + tabIndex.toString());
               print(ind);
-              // // Navigator.push(
-              // //     context,
-              // //     MaterialPageRoute(
-              // //         builder: (context) => Products.getC(
-              // //             tabController: tabController, index: index)));
-              // DefaultTabController.animateTo(DefaultTabController.of(context).index);
-              // print(tabController.index);
-              // // myNavigator.goToCategory(context);
-              // // products.control();
-              // // Products(key: widget.productsKey);
-              // DefaultTabController.of(context).animateTo(ind);
             },
             child: Center(
               child: Padding(
@@ -90,16 +69,22 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade100,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.08, vertical: 15),
-                          clipBehavior: Clip.none,
+                          padding: EdgeInsets.all(0),
+                          // decoration: BoxDecoration(image: DecorationImage(
+                          //   image: AssetImage(image)
+                          // ),
+                          // ),
+                          // decoration: BoxDecoration(
+                          //   // color: Colors.blue.shade100,
+                          //   shape: BoxShape.rectangle,
+                          //   borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))
+                          // ),
+                          // padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.08, vertical: 15),
+                          // clipBehavior: Clip.none,
                           // width: double.infinity,
                           // constraints: BoxConstraints.expand(),
-                          child: image),
+                          child: image
+                          ),
                         Container(
                           padding:
                               EdgeInsets.fromLTRB(5,5,5,5),
@@ -124,16 +109,16 @@ class _GridOneState extends State<GridOne> with SingleTickerProviderStateMixin {
           mainAxisSpacing: 10.0,
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           children: [
-            myItems(AssetImage('././assets/images/television.png'),
+            myItems(AssetImage('././assets/images/tv.jpg'),
                 'Appliances', 0),
             myItems(
-                AssetImage('././assets/images/speaker.png'), 'Electronics', 1),
+                AssetImage('././assets/images/speaker.jpg'), 'Electronics', 1),
             myItems(
-                AssetImage('././assets/images/armchair.png'), 'Furniture', 2),
-            myItems(AssetImage('././assets/images/dumbbell.png'), 'Fitness', 3),
+                AssetImage('././assets/images/sofa.jpg'), 'Furniture', 2),
+            myItems(AssetImage('././assets/images/dumbbell.jpg'), 'Fitness', 3),
             myItems(
-                AssetImage('././assets/images/boxes.png'), 'Space Saver', 4),
-            myItems(AssetImage('././assets/images/cutlery.png'), 'Kitchen', 5),
+                AssetImage('././assets/images/rack.jpg'), 'Space Saver', 4),
+            myItems(AssetImage('././assets/images/cutlery.jpg'), 'Kitchen', 5),
           ],
           staggeredTiles: [
             StaggeredTile.extent(1, 100.0),

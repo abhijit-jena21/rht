@@ -6,15 +6,16 @@ import '../screens/splash_screen.dart';
 class AuthService {
   Dio dio = new Dio();
 
-  signUp(name, email, phone, address) async {
-    final String pathUrl = "$serverLink/api/signUp";
+  signUp(name, email, phone, address, userid) async {
+    final String pathUrl = "$serverLink/api/signup";
     try {
       return await dio.post(pathUrl,
           data: {
-            "Name": name,
-            "Email": email,
-            "Phone": phone,
-            "Address": address
+            "_id": userid,
+            "name": name,
+            "email": email,
+            "phone": phone,
+            "address": address
           },
           options: Options(headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -29,12 +30,13 @@ class AuthService {
     }
   }
 
-  login(phone) async {
-    final String pathUrl = "$serverLink/api/login";
+  login(phone, userid) async {
+    final String pathUrl = "$serverLink/api/loginNew";
     try {
       return await dio.post(pathUrl,
           data: {
             "contact": phone,
+            "userid": userid
           },
           options: Options(headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -44,6 +46,29 @@ class AuthService {
           msg: e.response.data['msg'],
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+  }
+
+  useredit(userid, name, address, email) async {
+    final String pathUrl = "$serverLink/api/editprofile";
+    try {
+      return await dio.post(pathUrl,
+          data: {
+            "_id": userid,
+            "name": name,
+            "address": address,
+            "email": email
+          },
+          options: Options(headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }));
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg: "Couldn't connect to server",
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 15.0);
     }

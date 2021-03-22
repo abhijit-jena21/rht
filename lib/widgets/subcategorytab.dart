@@ -16,19 +16,21 @@ class SubCategoryTab extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
                 child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Container(
+                    
                     width: 60,
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         image: DecorationImage(
                           scale: 0.6,
-                          image: CachedNetworkImageProvider(img),
+                          image: AssetImage(img),
+                          
                           // fit: BoxFit.scaleDown)
                         )),
                   ),
@@ -39,7 +41,8 @@ class SubCategoryTab extends StatelessWidget {
               ),
               SizedBox(
                 width: 100,
-                child: Center(
+                child: Container(
+                  alignment: Alignment.topCenter,
                   child: Text(
                     name,
                     overflow: TextOverflow.ellipsis,
