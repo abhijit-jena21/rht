@@ -44,31 +44,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
   MyNavigator myNavigator;
 
+  Res res;
+  void initState() {
+    super.initState();
+    res = new Res();
+  }
+
   InputDecoration customInputDecoration(IconData icon, String title) {
     return InputDecoration(
       contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       focusedBorder: OutlineInputBorder(
         borderSide:
             BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.black54, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.red[400], width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide:
             BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       border: OutlineInputBorder(
         borderSide:
             BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       prefixIcon: Icon(
         icon,
@@ -129,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
         (val) async {
           print(val);
           final Map parsed = json.decode(val.toString());
-          final res = Res.fromJson(parsed);
+          res = Res.fromJson(parsed);
           print(res.sId);
 
           if (res.sId != finalId) {

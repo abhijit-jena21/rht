@@ -14,11 +14,16 @@ class CheckOut extends StatefulWidget {
 enum PaymentMethod { COD }
 
 class _CheckOutState extends State<CheckOut> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   PaymentMethod _method = PaymentMethod.COD;
   CheckoutService _checkoutService = CheckoutService();
   int _currentStep = 0;
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
+
+  void initState() {
+    super.initState();
+  }
 
   List<Step> _mySteps() {
     List<Step> _steps = [
@@ -66,24 +71,26 @@ class _CheckOutState extends State<CheckOut> {
   @override
   Widget build(BuildContext context) {
     void _submitDetails() async {
-      final FormState formState = _formKey.currentState;
+      final FormState formState = _formKey2.currentState;
 
       void showSnackBarMessage(String message,
           [MaterialColor color = Colors.red]) {
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
       }
 
       if (!formState.validate()) {
         showSnackBarMessage('Please enter correct data');
       } else {
         formState.save();
-        await CheckoutService().checkOut(finalId).whenComplete((){
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Success()), (_)=>false);
+        await CheckoutService().checkOut(finalId).whenComplete(() {
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) => Success()), (_) => false);
         });
       }
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           "Checkout",
@@ -193,7 +200,7 @@ class _CheckOutState extends State<CheckOut> {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: FlatButton(
           child: Text(
-            'Proceed to Rent',
+            'CONFIRM ORDER',
             style: Theme.of(context).textTheme.button,
           ),
           onPressed: _submitDetails,

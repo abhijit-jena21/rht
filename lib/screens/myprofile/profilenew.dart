@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rht/screens/admin/adminstarter.dart';
+import 'package:rht/screens/myprofile/currentorders.dart';
+import 'package:rht/screens/myprofile/orderstatus.dart';
+import 'package:rht/screens/myprofile/pastorders.dart';
 import 'package:rht/screens/myprofile/useredit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../my_navigator.dart';
@@ -8,7 +11,6 @@ import 'package:rht/screens/login.dart';
 import '../../screens/splash_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:convert';
 import 'package:rht/screens/myprofile/piechart.dart';
 
 class Res {
@@ -23,6 +25,8 @@ class Res {
 }
 
 class ProfileSecondPage extends StatefulWidget {
+  void Function(int) onButtonTapped;
+  ProfileSecondPage({this.onButtonTapped});
   @override
   _ProfileSecondPageState createState() => _ProfileSecondPageState();
 }
@@ -86,9 +90,9 @@ class _ProfileSecondPageState extends State<ProfileSecondPage> {
                   )
                 ],*/
               ),
-              if (exist == false) guestka(context),
+              if (finalPhone==null) guest(context),
               // SizedBox(height: 25.0),
-              if (exist == true) userka(context),
+              if (finalPhone!=null) user(context),
             ],
           ),
         ));
@@ -96,7 +100,7 @@ class _ProfileSecondPageState extends State<ProfileSecondPage> {
 }
 
 var res;
-Widget guestka(BuildContext context) {
+Widget guest(BuildContext context) {
   return Container(
     padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
     child: Column(
@@ -110,7 +114,7 @@ Widget guestka(BuildContext context) {
               children: <Widget>[
                 Icon(Icons.login_rounded, color: Theme.of(context).accentColor),
                 Text(
-                  "Login / Signup",
+                  "Login",
                   style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
                 Icon(Icons.arrow_forward_ios_rounded, color: Colors.black38),
@@ -144,7 +148,7 @@ void showMaterialDialog<T>({BuildContext context, Widget child}) {
   );
 }
 
-Widget userka(BuildContext context) {
+Widget user(BuildContext context) {
   return Container(
     padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
     child: Column(
@@ -180,7 +184,7 @@ Widget userka(BuildContext context) {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Icon(Icons.label_important_outline_rounded,
+                Icon(Icons.list,
                     color: Theme.of(context).accentColor),
                 Text(
                   "Current Orders",
@@ -190,7 +194,10 @@ Widget userka(BuildContext context) {
               ],
             ),
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CurrentOrders()));
+            },
           ),
         ),
         SizedBox(height: 10),
@@ -201,7 +208,7 @@ Widget userka(BuildContext context) {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Icon(Icons.location_pin, color: Theme.of(context).accentColor),
+                Icon(Icons.replay_circle_filled, color: Theme.of(context).accentColor),
                 Text(
                   "Past Orders",
                   style: TextStyle(fontSize: 16, color: Colors.black54),
@@ -210,7 +217,10 @@ Widget userka(BuildContext context) {
               ],
             ),
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PastOrders()));
+            },
           ),
         ),
         SizedBox(height: 10),
@@ -231,48 +241,9 @@ Widget userka(BuildContext context) {
               ],
             ),
             color: Colors.white,
-            onPressed: () {},
-          ),
-        ),
-        SizedBox(height: 10),
-
-        /*Container(
-            width: 700,
-            height:65,
-          child:  FlatButton(
-            child:Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget> [
-                Icon(Icons.language_rounded, color: Color(0xFFFFA751)), 
-                Text ("Language", 
-            style:TextStyle(fontSize:16,color:Colors.black54),),
-            Icon(Icons.arrow_forward_ios_rounded, color: Colors.black38), 
-              ],),
-            color: Colors.white,
-            onPressed: (){Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ChangeLanguagePage()),
-              );}, ),
-      ), SizedBox(height:10),*/
-        Container(
-          width: 700,
-          height: 65,
-          child: FlatButton(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Icon(Icons.stacked_bar_chart,
-                    color: Theme.of(context).accentColor),
-                Text(
-                  "Reports",
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                ),
-                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black38),
-              ],
-            ),
-            color: Colors.white,
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PiePage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => OrderStatus(from:"profile")));
             },
           ),
         ),
@@ -315,7 +286,7 @@ Widget userka(BuildContext context) {
               children: <Widget>[
                 Icon(Icons.logout, color: Theme.of(context).accentColor),
                 Text(
-                  "Sign out",
+                  "Log out",
                   style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
                 Icon(Icons.arrow_forward_ios_rounded, color: Colors.black38),

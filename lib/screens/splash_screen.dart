@@ -20,7 +20,7 @@ String finalAdminLocation;
 String finalAddress;
 String userId;
 bool admin = false;
-String serverLink = "http://2a6a37089d2d.ngrok.io";
+String serverLink = "https://87622dac14af.ngrok.io";
 
 class UserId {
   String id;

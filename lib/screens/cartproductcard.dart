@@ -152,18 +152,21 @@ class _CartProductCardState extends State<CartProductCard> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
                                   margin: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 0),
+                                      horizontal: 20, vertical: 5),
                                   // padding: EdgeInsets.symmetric(
                                   //     horizontal: 20, vertical: 10),
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           image: NetworkImage(widget.img ??
                                               "https://4.bp.blogspot.com/-1f1SDFIx3dY/Uh92eZAQ90I/AAAAAAAAHM4/5oiB4zC_tQ4/s1600/Photo-Background-White4.jpg"),
-                                          fit: BoxFit.contain))),
+                                          fit: BoxFit.cover))),
+                              SizedBox(height: 10,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   RawMaterialButton(
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    // padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                                       constraints: BoxConstraints.tightFor(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -203,16 +206,18 @@ class _CartProductCardState extends State<CartProductCard> {
                                         color: Theme.of(context).accentColor,
                                         size: 20,
                                       )),
-                                  // SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Text(
-                                    "${_count}",
+                                    "$_count",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText1
                                         .copyWith(color: Colors.black87),
                                   ),
-
+                                  SizedBox(width: 10,),
                                   RawMaterialButton(
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    // padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                                       constraints: BoxConstraints.tightFor(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -264,13 +269,13 @@ class _CartProductCardState extends State<CartProductCard> {
                           // mainAxisSize: MainAxisSize.min,
                           children: [
                             SizedBox(
-                              height: 20,
+                              height: 10,
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: Text(
                                 "${widget.name}",
-                                maxLines: 2,
+                                // maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
                                     .textTheme
@@ -318,7 +323,7 @@ class _CartProductCardState extends State<CartProductCard> {
                                           .copyWith(color: Colors.black54)),
                                 ),
                                 Container(
-                                  child: Text(" ₹1500",
+                                  child: Text(" ₹${widget.deposit}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2
@@ -333,7 +338,20 @@ class _CartProductCardState extends State<CartProductCard> {
                             ),
                             Container(
                               child: Text(
-                                  "${widget.duration} months | 3 day delivery",
+                                  "${widget.duration} months",
+                                  
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black54)),
+                            ),
+                            SizedBox(height: 5,),
+                            Container(
+                              child: Text(
+                                  "3 day delivery",
+                                  
                                   style: Theme.of(context)
                                       .textTheme
                                       .caption

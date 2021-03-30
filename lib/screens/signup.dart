@@ -51,28 +51,28 @@ class _SignupScreenState extends State<SignupScreen> {
       contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.black54, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.red[400], width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       border: OutlineInputBorder(
         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       prefixIcon: Icon(
         icon,
         // Icons.account_box_outlined,
-        color: Color(0xFFFFA751),
+        color: Theme.of(context).primaryColor,
       ),
       hintText: title,
       hintStyle: kHintTextStyle,

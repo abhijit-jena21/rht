@@ -22,7 +22,7 @@ class AuthService {
           }));
     } on DioError catch (e) {
       Fluttertoast.showToast(
-          msg: e.response.data['msg'],
+          msg: 'Something went wrong',
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -41,9 +41,10 @@ class AuthService {
           options: Options(headers: {
             'Content-type': 'application/json; charset=UTF-8',
           }));
-    } on DioError catch (e) {
+    } catch (e) {
       Fluttertoast.showToast(
-          msg: e.response.data['msg'],
+          // msg: e.response.data['msg'],
+          msg: "Something Went Wrong",
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Colors.red,
           textColor: Colors.white,

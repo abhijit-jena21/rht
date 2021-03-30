@@ -15,7 +15,8 @@ class CartBuilder extends StatefulWidget {
   final StreamController streamController;
   final StreamController streamController2;
   // final Function refresh;
-  CartBuilder(this.snapshot, this.userId, this.streamController, this.streamController2);
+  CartBuilder(this.snapshot, this.userId, this.streamController,
+      this.streamController2);
   @override
   CartBuilderState createState() => CartBuilderState();
 }
@@ -29,7 +30,7 @@ class CartBuilderState extends State<CartBuilder> {
     for (var i = 0; i < widget.snapshot.length; i++) {
       if (finalLocationId == widget.snapshot[i].locationid) {
         cartsum += widget.snapshot[i].iRent * widget.snapshot[i].count;
-        depositSum += widget.snapshot[i].deposit * widget.snapshot[i].count;
+        depositSum += widget.snapshot[i].deposit;
       }
     }
     if (index != null)
@@ -43,7 +44,7 @@ class CartBuilderState extends State<CartBuilder> {
     if (index != null) {
       cartsum -= widget.snapshot[index].iRent * widget.snapshot[index].count;
       depositSum -=
-          widget.snapshot[index].deposit * widget.snapshot[index].count;
+          widget.snapshot[index].deposit;
     }
 
     print(cartsum);
@@ -54,7 +55,7 @@ class CartBuilderState extends State<CartBuilder> {
   cartUpdateAdd({int index, int count}) {
     if (index != null) {
       cartsum += widget.snapshot[index].iRent * count;
-      depositSum += widget.snapshot[index].iRent * count;
+      depositSum += widget.snapshot[index].deposit;
     }
 
     print(cartsum);
@@ -65,7 +66,7 @@ class CartBuilderState extends State<CartBuilder> {
   cartUpdateMinus({int index, int count}) {
     if (index != null) {
       cartsum -= widget.snapshot[index].iRent * count;
-      depositSum -= widget.snapshot[index].iRent * count;
+      depositSum -= widget.snapshot[index].deposit;
     }
     print(cartsum);
     widget.streamController.sink.add(cartsum);
@@ -86,7 +87,7 @@ class CartBuilderState extends State<CartBuilder> {
   // ignore: missing_return
   Widget build(BuildContext context) {
     print(widget.snapshot);
-
+    var _car = MediaQuery.of(context).size.width/190;
     if (widget.snapshot.length > 0)
       return GridView.builder(
         scrollDirection: Axis.vertical,
@@ -96,7 +97,7 @@ class CartBuilderState extends State<CartBuilder> {
           crossAxisCount: 1,
           crossAxisSpacing: 10.0,
           mainAxisSpacing: 5.0,
-          childAspectRatio: 2,
+          childAspectRatio: _car,
         ),
         padding: EdgeInsets.all(2.0),
         itemCount: widget.snapshot.length,
@@ -155,7 +156,10 @@ class CartBuilderState extends State<CartBuilder> {
             ),
             Text(
               "Your cart is empty",
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(color: Colors.black87),
             ),
           ],
         )),

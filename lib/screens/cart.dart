@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:rht/screens/checkout.dart';
 import 'package:rht/screens/splash_screen.dart';
+import 'package:rht/screens/starter.dart';
 import '../services/usercheckservice.dart';
 import '../models/cartproduct.dart';
 import '../services/cartservice.dart';
 import 'package:dio/dio.dart';
 import './cartbuilder.dart';
-
 import 'cartbuilder.dart';
 import 'login.dart';
 
@@ -25,10 +23,9 @@ class Res {
 }
 
 class Cart extends StatefulWidget {
-  final String pathUrl;
   final String userId;
   // final void Function(int) onButtonTapped;
-  Cart({this.pathUrl, this.userId});
+  Cart({this.userId});
   @override
   _CartState createState() => _CartState();
 }
@@ -124,48 +121,14 @@ class _CartState extends State<Cart> {
         //   print(res.result);
         if (finalPhone == null) {
           print(finalPhone.toString());
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => LoginScreen("/checkout")));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => LoginScreen("/cart")));
         } else
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => CheckOut()));
         // });
       }
     };
-    // if () {
-    //   setState(() {
-    //     conditionalColor = Colors.grey;
-    //     print("i");
-    //     _onPressed = null;
-    //   });
-    // } else if (widget.items.length > 0) {
-    //   setState(() {
-    //     print("am");
-    //     conditionalColor = Theme.of(context).accentColor;
-    //     var now = DateTime.now();
-    //     var formatter = DateFormat('yyyy-MM-dd');
-    //     String formattedDate = formatter.format(now);
-    //     String finalDate = '${formattedDate}T00:00:00.000Z';
-    //     _onPressed = () async {
-    //       var response = await cartService.addToCart(
-    //           finalId,
-    //           widget.productId,
-    //           finalLocationId,
-    //           widget.name,
-    //           1,
-    //           duration,
-    //           calculatedRent,
-    //           widget.img[0],
-    //           finalDate);
-    //       print(response.toString());
-    //       if (response.toString() == "New product added" ||
-    //           response.toString() == "Count of product increased")
-    //         showActionSnackBar(context);
-    //     };
-    //   });
-    // }
     return Container(
       height: 40,
       width: MediaQuery.of(context).size.width * 0.4,
@@ -188,22 +151,32 @@ class _CartState extends State<Cart> {
       child: Scaffold(
         key: _scaffoldKey2,
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context)=>Starter(
+                                  location: finalLocation,
+                                  locationId: finalLocationId,
+                                  userId: finalId)),(_)=>false);
+            },
+          ),
+          title: Text(
+            "My Cart",
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
         body: SingleChildScrollView(
             // height: MediaQuery.of(context).size.h,
             child: Column(
           children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              color: Theme.of(context).primaryColor,
-              child: Text(
-                "My Cart",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
             FutureBuilder<List<CartProduct>>(
                 future: futureProducts,
                 // ignore: missing_return
@@ -222,7 +195,10 @@ class _CartState extends State<Cart> {
                             ),
                             Text(
                               "Your cart is empty",
-                              style: Theme.of(context).textTheme.headline3,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(color: Colors.black87),
                             ),
                           ],
                         )),
@@ -230,8 +206,8 @@ class _CartState extends State<Cart> {
                     } else {
                       print(snapshot.data);
                       return Container(
-                          child: CartBuilder(
-                              snapshot.data, widget.userId, streamController, streamController2));
+                          child: CartBuilder(snapshot.data, widget.userId,
+                              streamController, streamController2));
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
                     return Text(
@@ -286,19 +262,18 @@ class _CartState extends State<Cart> {
                     height: 20,
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: StreamBuilder<Object>(
-                      stream: streamController2.stream,
-                      builder: (context, snapshot) {
-                        return Text(
-                          snapshot.data!=null
-                          ? 'Deposit: ₹${snapshot.data}'
-                          :'',
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black,
-                              fontFamily: "Montserrat"),
-                        );
-                      }
-                    ),
+                        stream: streamController2.stream,
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.data != null
+                                ? 'Deposit: ₹${snapshot.data}'
+                                : '',
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                                fontFamily: "Montserrat"),
+                          );
+                        }),
                   ),
                 ],
               ),

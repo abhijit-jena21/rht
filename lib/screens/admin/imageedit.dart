@@ -3,32 +3,41 @@ import 'dart:io';
 import '../../models/imageupload.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 
-class SingleImageUpload extends StatefulWidget {
+class SingleImageEdit extends StatefulWidget {
+  final List<Object> images;
   final void Function(int, Object) notifyParent;
-  SingleImageUpload(this.notifyParent);
+  SingleImageEdit(this.notifyParent, this.images);
   @override
-  _SingleImageUploadState createState() {
-    return _SingleImageUploadState();
+  _SingleImageEditState createState() {
+    return _SingleImageEditState();
   }
 }
 
-class _SingleImageUploadState extends State<SingleImageUpload> {
+class _SingleImageEditState extends State<SingleImageEdit> {
+  Dio dio = Dio();
   List<Object> images = List<Object>();
   Future<PickedFile> _imageFile;
   File _image;
   ImagePicker _imagePicker = ImagePicker();
   @override
-  void initState() { 
+  void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
-      images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");
+      for (var i = 0; i < widget.images.length; i++) {
+        print(widget.images[i]);
+        images.add(NetworkImage(widget.images[i]));
+        print("added ${i + 1}");
+      }
+      for (var i = widget.images.length; i < 3; i++) {
+        images.add("Add Image");
+        print("added add image ${i + 1}");
+      }
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Flexible(
@@ -43,17 +52,28 @@ class _SingleImageUploadState extends State<SingleImageUpload> {
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
-        if (images[index] is ImageUploadModel) {
-          ImageUploadModel uploadModel = images[index];
+        if (images[index] is ImageUploadModel ||
+            images[index] is NetworkImage) {
+          ImageUploadModel uploadModel;
+          if (images[index] is ImageUploadModel) {
+            uploadModel = images[index];
+          }
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                Image.file(
-                  uploadModel.imageFile,
-                  width: 300,
-                  height: 300,
-                ),
+                if (images[index] is NetworkImage)
+                  Image(
+                    image: images[index],
+                    width: 300,
+                    height: 300,
+                  )
+                else if (images[index] is ImageUploadModel)
+                  Image.file(
+                    uploadModel.imageFile,
+                    width: 300,
+                    height: 300,
+                  ),
                 Positioned(
                   right: 5,
                   top: 5,

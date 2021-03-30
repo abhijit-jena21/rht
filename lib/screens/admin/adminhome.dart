@@ -17,20 +17,28 @@ class _AdminHomeState extends State<AdminHome> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0,
           title: Text(
             'RHT Admin',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white),
           ),
+          actions: [
+            LocationPicker(
+              locationId: widget.locationId,
+              location: widget.location,
+        // userId: widget.userId,
+            ),
+            SizedBox(width: 10,)
+          ],
         ),
         // bottomNavigationBar: MyBottomNavigationBar(),
         body: Container(
             child: ListView(shrinkWrap: true, children: [
-          LocationPicker(
-            location: widget.location,
-            locationId: widget.locationId,
-          ),
+          // LocationPicker(
+          //   location: widget.location,
+          //   locationId: widget.locationId,
+          // ),
         ])));
   }
 }

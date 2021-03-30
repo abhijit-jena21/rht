@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class SubCategoryTab extends StatelessWidget {
   final String img;
@@ -10,7 +9,7 @@ class SubCategoryTab extends StatelessWidget {
     return Container(
       padding: EdgeInsets.zero,
       // constraints: BoxConstraints.,
-      height: 90,
+      height: 80,
       width: 100.0,
       child: Tab(
         child: Padding(
@@ -23,8 +22,8 @@ class SubCategoryTab extends StatelessWidget {
                   padding: const EdgeInsets.all(3.0),
                   child: Container(
                     
-                    width: 60,
-                    height: 40,
+                    width: 50,
+                    height: 30,
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         image: DecorationImage(

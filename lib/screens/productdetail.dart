@@ -179,7 +179,7 @@ class _ProductDetailState extends State<ProductDetail> {
       void Function() _onPressed;
       print("locationid" + widget.snapshot.locationid);
       // print("shared" + finalLocationId);
-      if (widget.snapshot.itemsid.length == 0 ||
+      if (widget.snapshot.stock <= 0 ||
           (widget.snapshot.locationid != finalLocationId)) {
         setState(() {
           conditionalColor = Colors.grey;
@@ -217,10 +217,11 @@ class _ProductDetailState extends State<ProductDetail> {
         height: 40,
         width: MediaQuery.of(context).size.width * 0.4,
         child: RaisedButton(
+          elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           color: Theme.of(context).buttonColor,
           onPressed: _onPressed,
-          child: Text('ADD TO CART', style: Theme.of(context).textTheme.button),
+          child: Text('ADD TO CART', style: Theme.of(context).textTheme.bodyText2),
         ),
       );
     }
@@ -308,7 +309,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     overflow: TextOverflow.clip,
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                         color: Colors.black87, fontWeight: FontWeight.bold))),
-            if (widget.snapshot.itemsid.length == 0)
+            if (widget.snapshot.stock <= 0)
               Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.center,
@@ -460,60 +461,6 @@ class _ProductDetailState extends State<ProductDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: buildImageRow(),
-              // children: [
-              //   for (var i = 0; i < widget.snapshot.img.length;i++)
-              //   {
-              //     buildImage(i);
-              //   }
-              //     Container(
-              //       margin: EdgeInsets.fromLTRB(20, 10, 5, 10),
-              //       padding: EdgeInsets.all(20),
-              //       height: 100,
-              //       width: MediaQuery.of(context).size.width * 0.25,
-              //       decoration: BoxDecoration(
-              //           // border: Border(),
-              //           borderRadius: BorderRadius.circular(10),
-              //           image: DecorationImage(
-              //               fit: BoxFit.cover,
-              //               image: images.elementAt(0) != null
-              //                   ? images.elementAt(0)
-              //                   : NetworkImage(
-              //                       "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
-              //       // child: NetworkImage(url: widget.img[0]),
-              //     ),
-              //   Container(
-              //     margin: EdgeInsets.fromLTRB(10, 10, 5, 10),
-              //     padding: EdgeInsets.all(20),
-              //     height: 100,
-              //     width: MediaQuery.of(context).size.width * 0.25,
-              //     decoration: BoxDecoration(
-              //         // border: Border(),
-              //         borderRadius: BorderRadius.circular(10),
-              //         image: DecorationImage(
-              //             fit: BoxFit.cover,
-              //             image: images.elementAt(1) != null
-              //                 ? images.elementAt(1)
-              //                 : NetworkImage(
-              //                     "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
-              //     // child: NetworkImage(url: widget.img[0]),
-              //   ),
-              //   Container(
-              //     margin: EdgeInsets.fromLTRB(10, 10, 5, 10),
-              //     padding: EdgeInsets.all(20),
-              //     height: 100,
-              //     width: MediaQuery.of(context).size.width * 0.25,
-              //     decoration: BoxDecoration(
-              //         // border: Border(),
-              //         borderRadius: BorderRadius.circular(10),
-              //         image: DecorationImage(
-              //             fit: BoxFit.cover,
-              //             image: images.elementAt(2) != null
-              //                 ? images.elementAt(2)
-              //                 : NetworkImage(
-              //                     "https://oconnorpg.com/wp-content/uploads/2019/05/White-Square.jpg"))),
-              //     // child: NetworkImage(url: widget.img[0]),
-              //   ),
-              // ],
             ),
             Container(
               // height: 100,
@@ -521,7 +468,7 @@ class _ProductDetailState extends State<ProductDetail> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text('Product Details',
                   style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      color: Colors.black87,
+                      color: Theme.of(context).primaryColor,
                       height: 1.5,
                       fontWeight: FontWeight.bold)),
             ),
@@ -534,6 +481,84 @@ class _ProductDetailState extends State<ProductDetail> {
                       .textTheme
                       .bodyText2
                       .copyWith(color: Colors.black87, height: 1.5)),
+            ),
+            Container(
+              // height: 100,
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text('Terms and Conditions',
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      height: 1.5,
+                      fontWeight: FontWeight.bold)),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.account_balance_wallet_rounded, color: Theme.of(context).accentColor,size: 30,),
+                        SizedBox(width: 10,),
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Refundable Deposit",
+                              style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                padding: EdgeInsets.symmetric( vertical: 10),
+                                child: Text("You will need to pay deposit amount upfront. Monthly rent will be collected each month from your delivery date.",
+                                style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black87),
+                                maxLines: 4,),
+                              )
+                            ],
+                          ),
+                        )
+                      ],),
+                  )
+                ],),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.calendar_today, color: Theme.of(context).accentColor,size: 30,),
+                        SizedBox(width: 10,),
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Renting Tenure",
+                              style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                padding: EdgeInsets.symmetric( vertical: 10),
+                                child: Text("Rent agreement will remain valid for the tenure you\'ve selected. In order to continue using the product, you will need to rent the item again.",
+                                style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black87),
+                                maxLines: 4,),
+                              )
+                            ],
+                          ),
+                        )
+                      ],),
+                  )
+                ],),
             ),
 
             SizedBox(

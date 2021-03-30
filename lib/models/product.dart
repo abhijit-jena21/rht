@@ -5,11 +5,12 @@ class Product {
   List<String> img;
   String details;
   int price;
-  int deposit;
+  int deposit; 
   int stock;
   int demand;
   int rent;
   int duration;
+  int ondemand;
   List<String> itemsid;
   String locationid;
 
@@ -25,10 +26,11 @@ class Product {
       this.demand,
       this.rent,
       this.duration,
+      this.ondemand,
       this.itemsid,
       this.locationid});
 
-  Product.fromJson(Map<String, dynamic> json) {
+  Product.fromJson(Map<String, dynamic> json) { 
     sId = json['_id'];
     subcategoryid = json['subcategoryid'];
     name = json['name'];
@@ -40,6 +42,7 @@ class Product {
     demand = json['demand'];
     rent = json['rent'];
     duration = json['duration'];
+    ondemand = json['ondemand'];
     itemsid = json['itemsid'].cast<String>();
     locationid = json['locationid'];
   }
@@ -57,6 +60,7 @@ class Product {
     data['demand'] = this.demand;
     data['rent'] = this.rent;
     data['duration'] = this.duration;
+    data['ondemand'] = this.ondemand;
     data['itemsid'] = this.itemsid;
     data['locationid'] = this.locationid;
     return data;

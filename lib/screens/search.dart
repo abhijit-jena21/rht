@@ -11,7 +11,7 @@ class Search extends SearchDelegate<String> {
     return theme;
   }
 
-  List suggestions = ["TV", "Fridge"];
+  List suggestions = [];
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -39,6 +39,7 @@ class Search extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
+    suggestions.add(query);
     return SearchBody(
       pathUrl: "$serverLink/api/searchengine",
       userId: finalId,
@@ -49,14 +50,22 @@ class Search extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        title: Text(
-          suggestions[index],
-          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87),
-        ),
-      ),
-      itemCount: suggestions.length,
-    );
+    // return ListView.builder(
+    //   itemBuilder: (context, index) => ListTile(
+    //     title: Text(
+    //       suggestions[index],
+    //       style: Theme.of(context)
+    //           .textTheme
+    //           .headline6
+    //           .copyWith(color: Colors.black87),
+    //     ),
+    //     onTap: () {
+    //       query = suggestions[index];
+    //       buildResults(context);
+    //     },
+    //   ),
+    //   itemCount: suggestions.length,
+    // );
+    return Container();
   }
 }

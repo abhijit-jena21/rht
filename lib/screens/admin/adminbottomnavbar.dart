@@ -22,15 +22,18 @@ class _AdminBottomNavigationBarState extends State<AdminBottomNavigationBar> {
       onTap: widget.onItemTapped,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Theme.of(context).accentColor,
-      selectedFontSize: SizeConfig.defaultSize * 1.2,
+      selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+      unselectedIconTheme: IconThemeData(color: Colors.black87),
+      unselectedItemColor: Colors.black87,
+      selectedFontSize: 12,
       showSelectedLabels: true,
-      showUnselectedLabels: false,
+      showUnselectedLabels: true,
       items: [
         BottomNavigationBarItem(
             icon: Icon(
               Icons.home_filled,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             label: 'Home',
             backgroundColor: Colors.white),
@@ -39,7 +42,7 @@ class _AdminBottomNavigationBarState extends State<AdminBottomNavigationBar> {
             icon: Icon(
               Icons.apps,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             backgroundColor: Colors.white),
         BottomNavigationBarItem(
@@ -47,7 +50,7 @@ class _AdminBottomNavigationBarState extends State<AdminBottomNavigationBar> {
             icon: Icon(
               Icons.list_alt,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             backgroundColor: Colors.white),
         BottomNavigationBarItem(
@@ -55,7 +58,7 @@ class _AdminBottomNavigationBarState extends State<AdminBottomNavigationBar> {
             icon: Icon(
               MdiIcons.face,
               // size: SizeConfig.defaultSize,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
             backgroundColor: Colors.white)
       ],

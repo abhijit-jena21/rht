@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rht/screens/admin/adminstarter.dart';
 import 'package:rht/screens/admin/dropdown.dart';
 import 'package:rht/screens/admin/imageupload.dart';
+import 'package:rht/screens/splash_screen.dart';
 import 'package:rht/services/uploadservice.dart';
 
 class DetailsForm extends StatefulWidget {
+  final void Function(int, int, String) onButtonTapped;
+  DetailsForm(this.onButtonTapped);
   @override
   _DetailsFormState createState() => _DetailsFormState();
 }
@@ -16,10 +20,14 @@ class _DetailsFormState extends State<DetailsForm> {
   String _rent;
   String _deposit;
   String _stock;
+  String _subcategoryid;
+  String _category;
   String _subcategory;
-  List<Object> _images;
+  int tabIndex;
+  List<Object> _images = List<Object>();
+  AdminStarter _adminStarter = AdminStarter();
   UploadService _uploadService = UploadService();
-
+  String indices = "000";
   String _validateText(String value) {
     if (value.isEmpty) return 'Required Field.';
     final RegExp nameExp = RegExp(r'^[A-Za-z0-9 ]+$');
@@ -33,34 +41,43 @@ class _DetailsFormState extends State<DetailsForm> {
     if (value.isEmpty) return 'Required Field.';
     final RegExp nameExp = RegExp(r'^[0-9 ]+$');
     if (!nameExp.hasMatch(value)) {
-      return 'Please enter only numbers.';
+      return 'Please enter numbers.';
     }
     return null;
   }
 
-  void _getSubcategoryId(String val) {
+  void _getSubcategoryId(String val1, String val2, String val3, int val4) {
     setState(() {
-      _subcategory = val;
+      _subcategoryid = val1;
+      _category = val2;
+      _subcategory = val3;
+      tabIndex = val4;
     });
   }
 
-  void _getImages(List<Object> val) {
+  void _getImages(int index, Object val) {
     setState(() {
-      _images = val;
+      _images.add(val);
+      indices = indices.replaceRange(index, index + 1, "1");
+      print(indices);
+      print("indices" + indices);
     });
   }
 
   void _formSubmit() async {
     var form = _formKey.currentState;
+    print(_subcategoryid);
+    print(_category);
     print(_subcategory);
     print(_images);
     if (form.validate()) {
       form.save();
       await _uploadService
-          .addProduct(_name, _subcategory, _price, _rent, _deposit, _stock,
-              _details, _images)
+          .addProduct(_name, _subcategoryid, _category, _subcategory, _price,
+              _rent, _deposit, _stock, _details, _images, indices)
           .whenComplete(() {
         print("done");
+        widget.onButtonTapped(1, tabIndex, finalAdminLocationId);
       });
     }
   }
@@ -130,7 +147,7 @@ class _DetailsFormState extends State<DetailsForm> {
                       this._price = value;
                       print('Price=$_price');
                     },
-                    validator: _validateText,
+                    validator: _validateNumber,
                   ),
                 ),
                 SizedBox(
@@ -153,7 +170,7 @@ class _DetailsFormState extends State<DetailsForm> {
                       this._rent = value;
                       print('Rent=$_rent');
                     },
-                    validator: _validateText,
+                    validator: _validateNumber,
                   ),
                 ),
               ],
@@ -184,7 +201,7 @@ class _DetailsFormState extends State<DetailsForm> {
                       this._deposit = value;
                       print('Deposit=$_deposit');
                     },
-                    validator: _validateText,
+                    validator: _validateNumber,
                   ),
                 ),
                 SizedBox(
@@ -207,7 +224,7 @@ class _DetailsFormState extends State<DetailsForm> {
                       this._stock = value;
                       print('Quanity=$_stock');
                     },
-                    validator: _validateText,
+                    validator: _validateNumber,
                   ),
                 ),
               ],

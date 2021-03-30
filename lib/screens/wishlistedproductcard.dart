@@ -76,7 +76,7 @@ class _WishlistedProductCardState extends State<WishlistedProductCard> {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage(widget.snapshot.img[0]),
-                                    fit: BoxFit.contain))),
+                                    fit: BoxFit.cover))),
                         if (widget.snapshot.itemsid.length == 0)
                           Positioned(
                             bottom: 5,
@@ -139,7 +139,7 @@ class _WishlistedProductCardState extends State<WishlistedProductCard> {
                           padding: EdgeInsets.zero,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50)),
-                          color: Colors.grey[200],
+                          color: Colors.transparent,
                           onPressed: () async {
                             isFavourite = await wishlistService
                                 .responseFromWishlist(

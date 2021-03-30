@@ -33,7 +33,7 @@ class ProductDetailsService {
 
   Future<Product> response(productId) async {
     Response response = await post(productId);
-    print(response.data);
+    // print(response.data);
     var responseData = response.data;
     return Product.fromJson(responseData);
   }

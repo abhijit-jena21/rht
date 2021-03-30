@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
 import 'package:dio/dio.dart';
+import 'package:rht/screens/admin/editdetailsbuilder.dart';
+import 'package:rht/screens/cart.dart';
 import 'package:rht/services/cartservice.dart';
+import 'package:rht/services/uploadservice.dart';
+import 'editproduct.dart';
 
 import "../../my_navigator.dart";
 
@@ -17,6 +21,9 @@ class AdminProductCard extends StatefulWidget {
   final int duration;
   final String locationId;
   final List<String> items;
+  final int index;
+  final Function(int) notifyParent;
+  // final void Function(int, int, String) onButtonTapped;
   AdminProductCard(
       this.productId,
       this.name,
@@ -27,9 +34,16 @@ class AdminProductCard extends StatefulWidget {
       this.deposit,
       this.duration,
       this.items,
-      this.locationId);
+      this.locationId,
+      this.index,
+      this.notifyParent,);
   @override
   _AdminProductCardState createState() => _AdminProductCardState();
+}
+
+enum ButtonAction {
+  cancel,
+  Logout,
 }
 
 class _AdminProductCardState extends State<AdminProductCard> {
@@ -38,8 +52,9 @@ class _AdminProductCardState extends State<AdminProductCard> {
   String response;
   Dio dio = new Dio();
   int stock;
-  CartService cartService = new CartService();
-
+  UploadService _uploadService = UploadService();
+  CartService cartService = CartService();
+  String quantity;
   // int cast(x) => x is int ? x : null;
 
   void initState() {
@@ -47,10 +62,11 @@ class _AdminProductCardState extends State<AdminProductCard> {
     checkStock().then((result) {
       // print(result);
       // print(result.runtimeType);
-      setState(() {
-        stock = result;
-        print(stock);
-      });
+      if (mounted)
+        setState(() {
+          stock = result;
+          print(stock);
+        });
     });
     // print("result"+result.toString());
   }
@@ -72,7 +88,7 @@ class _AdminProductCardState extends State<AdminProductCard> {
                 .copyWith(fontWeight: FontWeight.normal, color: Colors.green)),
       );
     } else {
-       if (stock > 0) {
+      if (stock > 0) {
         return Container(
           child: Text("$stock left",
               style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -80,7 +96,7 @@ class _AdminProductCardState extends State<AdminProductCard> {
                   color: Colors.green,
                   fontSize: 12)),
         );
-      } else if (stock == 0)
+      } else if (stock <= 0)
         return Container(
           child: Text("Out of stock",
               style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -94,18 +110,35 @@ class _AdminProductCardState extends State<AdminProductCard> {
   // foobar() async {
   //   await _getWishlistedProducts();
   // }
-  static const menuItems = <String>['Edit', 'Delete'];
+  static const menuItems = <String>['Edit', 'Update Stock', 'Delete'];
   String _selectedVal;
+
+  void showMaterialDialog<T>({BuildContext context, Widget child}) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    );
+  }
+
+  String _validateNumber(String value) {
+    if (value.isEmpty) return 'Required Field.';
+    final RegExp nameExp = RegExp(r'^[0-9 ]+$');
+    if (!nameExp.hasMatch(value)) {
+      return 'Please enter only numbers.';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     List<PopupMenuItem<String>> _popUpMenuItems = menuItems
         .map(
           (String value) => PopupMenuItem<String>(
             value: value,
-            child: Text(
+            child: Text( 
               value,
-              style: Theme.of(context)
+              style: Theme.of(context) 
                   .textTheme
                   .bodyText2
                   .copyWith(color: Colors.black87),
@@ -130,7 +163,7 @@ class _AdminProductCardState extends State<AdminProductCard> {
                     color: Colors.white),
                 child: IntrinsicHeight(
                   child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -148,7 +181,7 @@ class _AdminProductCardState extends State<AdminProductCard> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
                                   margin: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 0),
+                                      horizontal: 10, vertical: 0),
                                   // padding: EdgeInsets.symmetric(
                                   //     horizontal: 20, vertical: 10),
                                   decoration: BoxDecoration(
@@ -176,7 +209,7 @@ class _AdminProductCardState extends State<AdminProductCard> {
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: Text(
                                 "${widget.name}",
-                                maxLines: 2,
+                                // maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
                                     .textTheme
@@ -224,7 +257,7 @@ class _AdminProductCardState extends State<AdminProductCard> {
                                           .copyWith(color: Colors.black54)),
                                 ),
                                 Container(
-                                  child: Text(" ₹1500",
+                                  child: Text("${widget.deposit}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2
@@ -243,12 +276,14 @@ class _AdminProductCardState extends State<AdminProductCard> {
                             stockWidget()
                           ],
                         ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                     color: Colors.white),
@@ -256,126 +291,135 @@ class _AdminProductCardState extends State<AdminProductCard> {
                                 alignment: Alignment.topCenter,
                                 child: PopupMenuButton<String>(
                                   elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5)),
+                                  // shape: RoundedRectangleBorder(
+                                  //     borderRadius: BorderRadius.circular(5)),
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  onSelected: (String newValue) {
+                                  onSelected: (String newValue) async {
                                     _selectedVal = newValue;
+                                    if (_selectedVal == "Edit") {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => EditDetailsBuilder(
+                                                productId: widget.productId
+                                                  )));
+                                    } else if (_selectedVal == "Delete") {
+                                      showMaterialDialog<ButtonAction>(
+                                        context: context,
+                                        child: AlertDialog(
+                                          title: const Text(
+                                            'Do you really want to delete this product?',
+                                            style: TextStyle(
+                                                color: Colors.black45,
+                                                fontSize: 16),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: const Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Color(0xFF2873f0)),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: const Text(
+                                                'Delete',
+                                                style:
+                                                    TextStyle(color: Colors.red),
+                                              ),
+                                              onPressed: () async {
+                                                await _uploadService
+                                                    .delete(
+                                                  widget.productId,
+                                                )
+                                                    .whenComplete(() {
+                                                  Navigator.pop(context);
+                                                  widget
+                                                      .notifyParent(widget.index);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    } else if (_selectedVal == "Update Stock") {
+                                      showMaterialDialog<ButtonAction>(
+                                        context: context,
+                                        child: AlertDialog(
+                                          title: const Text(
+                                            'Enter Stock',
+                                            style: TextStyle(
+                                                color: Colors.black45,
+                                                fontSize: 16),
+                                          ),
+                                          content: Form(
+                                            key: _formKey,
+                                            child: TextFormField(
+                                              keyboardType: TextInputType.number,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                      color: Colors.black87),
+                                              initialValue: stock.toString(),
+                                              onSaved: (value) {
+                                                quantity = value;
+                                              },
+                                              validator: _validateNumber,
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: const Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.black45),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: const Text(
+                                                'Confirm',
+                                                style: TextStyle(
+                                                    color: Color(0xFF2873f0)),
+                                              ),
+                                              onPressed: () async {
+                                                var form = _formKey.currentState;
+
+                                                form.save();
+                                                await _uploadService
+                                                    .updateStock(widget.productId,
+                                                        quantity)
+                                                    .whenComplete(() {
+                                                  checkStock().then((result) {
+                                                    if (mounted)
+                                                      setState(() {
+                                                        stock = result;
+                                                        print(stock);
+                                                      });
+                                                  });
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
                                   },
                                   itemBuilder: (BuildContext context) =>
                                       _popUpMenuItems,
                                 ),
                               )
-                          ],
+                            ],
+                          ),
                         ),
                       ]),
                 ))));
-    // print("hereiam" + wishlistedProducts[0].sId);
-    // return Padding(
-    //     padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
-    //     child: InkWell(
-    //         onTap: () {},
-    //         child: Container(
-    //             decoration: BoxDecoration(
-    //                 borderRadius: BorderRadius.circular(15.0),
-    //                 // boxShadow: [
-    //                 //   BoxShadow(
-    //                 //       color: Colors.grey.withOpacity(0.2),
-    //                 //       spreadRadius: 3.0,
-    //                 //       blurRadius: 5.0)
-    //                 // ],
-    //                 color: Colors.white),
-    //             child: Column(mainAxisSize: MainAxisSize.min, children: [
-    //               SizedBox(
-    //                 height: 110,
-    //                 // width: 110,
-    //                 child: Stack(
-    //                   alignment: AlignmentDirectional.center,
-    //                   // overflow: Overflow.clip,
-    //                   fit: StackFit.loose,
-    //                   children: [
-    //                     // Hero(
-    //                     //     tag: imgPath,
-    //                     Container(
-    //                         // alignment: Alignment.center,
-    //                         constraints:
-    //                             BoxConstraints.loose(Size.fromHeight(100)),
-    //                         height: 110,
-    //                         width: double.infinity,
-    //                         padding: EdgeInsets.symmetric(
-    //                             horizontal: 10, vertical: 10),
-    //                         decoration: BoxDecoration(
-    //                             image: DecorationImage(
-    //                                 image: NetworkImage(widget.img[0]),
-    //                                 fit: BoxFit.contain))),
-    //                     Positioned(
-    //                       top: 5,
-    //                       right: 10,
-    //                       child: SizedBox(
-    //                           height: 25,
-    //                           width: 20,
-    //                           child: Container(
-    //                             decoration: BoxDecoration(
-    //                                 borderRadius: BorderRadius.circular(5),
-    //                                 color: Colors.white),
-    //                             // color: Colors.white,
-    //                             alignment: Alignment.center,
-    //                             child: PopupMenuButton<String>(
-    //                               elevation: 2,
-    //                               shape: RoundedRectangleBorder(
-    //                                   borderRadius: BorderRadius.circular(5)),
-    //                               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-    //                               onSelected: (String newValue) {
-    //                                 _selectedVal = newValue;
-    //                               },
-    //                               itemBuilder: (BuildContext context) =>
-    //                                   _popUpMenuItems,
-    //                             ),
-    //                           )),
-    //                     ),
-    //                     if (widget.items.length == 0)
-    //                       Positioned(
-    //                         bottom: 5,
-    //                         // right: 10,
-    //                         child: SizedBox(
-    //                             height: 25,
-    //                             width: 75,
-    //                             child: Container(
-    //                               alignment: Alignment.center,
-    //                               color: Colors.redAccent,
-    //                               child: Text(
-    //                                 "Out of stock",
-    //                                 style: TextStyle(
-    //                                     color: Colors.white, fontSize: 10),
-    //                               ),
-    //                             )),
-    //                       ),
-    //                   ],
-    //                 ),
-    //               ),
-    //               SizedBox(height: 7.0),
-    //               Container(
-    //                 alignment: Alignment.centerLeft,
-    //                 padding: EdgeInsets.only(left: 10),
-    //                 height: 40,
-    //                 child: Text(widget.name,
-    //                     textAlign: TextAlign.left,
-    //                     style: TextStyle(
-    //                         color: Color(0xFF575E67),
-    //                         // fontFamily: 'Varela',
-    //                         fontSize: 12.0)),
-    //               ),
-    //               Container(
-    //                 alignment: Alignment.centerLeft,
-    //                 padding: EdgeInsets.only(left: 10),
-    //                 height: 20,
-    //                 child: Text("₹ " + widget.rent.toString() + '/month',
-    //                     textAlign: TextAlign.left,
-    //                     style: TextStyle(
-    //                         color: Color(0xFFCC8053),
-    //                         // fontFamily: 'Varela',
-    //                         fontSize: 12.0)),
-    //               ),
-    //             ]))));
   }
 }

@@ -69,6 +69,7 @@ class WishlistService {
     Response response = await userIdentity(userId);
     print(response.data);
     var responseData = response.data;
+    print(responseData.runtimeType);
     // print(data);
     print('some');
     if (responseData != null)

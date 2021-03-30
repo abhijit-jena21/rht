@@ -23,10 +23,11 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Theme.of(context).accentColor,
       selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-      unselectedIconTheme: IconThemeData(color: Colors.black87),
+      unselectedIconTheme: IconThemeData(color: Colors.black54),
+      unselectedItemColor: Colors.black54,
       selectedFontSize: 12,
       showSelectedLabels: true,
-      showUnselectedLabels: false,
+      showUnselectedLabels: true,
       // selectedLabelStyle: Theme.of(context).textTheme.bodyText2,
       items: [
         BottomNavigationBarItem(

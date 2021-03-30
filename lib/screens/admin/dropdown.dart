@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 //import 'dart:io';
 
 class DropDown extends StatefulWidget {
-  final void Function(String) notifyParent;
+  final void Function(String, String, String, int) notifyParent;
   DropDown({this.notifyParent});
   @override
   createState() => _DropDownState();
@@ -10,7 +10,7 @@ class DropDown extends StatefulWidget {
 
 class _DropDownState extends State<DropDown> {
   Map<String, String> _subcategoryList = {};
-
+  int tabIndex;
   final List<String> _categoryList = [
     "Appliances",
     "Electronics",
@@ -84,6 +84,10 @@ class _DropDownState extends State<DropDown> {
     // this._populateDropdown();
   }
 
+  String _validate(String value) {
+    if (value?.isEmpty??true) return 'Required Field.';
+  }
+
   Widget build(BuildContext context) {
     // TODO: implement build
 
@@ -92,13 +96,14 @@ class _DropDownState extends State<DropDown> {
       children: <Widget>[
         Flexible(
           fit: FlexFit.loose,
-          child: DropdownButton<String>(
+          child: DropdownButtonFormField<String>(
             style: Theme.of(context)
                 .textTheme
                 .bodyText1
                 .copyWith(color: Colors.black87),
             hint: Text('Category'),
             value: _selectedCategory,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             isExpanded: true,
             items: _categoryList.map((String value) {
               return DropdownMenuItem<String>(
@@ -109,22 +114,29 @@ class _DropDownState extends State<DropDown> {
             onChanged: (category) {
               if (category == 'Appliances') {
                 _subcategoryList = _appliances;
+                tabIndex = 0;
               } else if (category == 'Electronics') {
                 _subcategoryList = _electronics;
+                tabIndex = 1;
               } else if (category == 'Furniture') {
                 _subcategoryList = _furniture;
+                tabIndex = 2;
               } else if (category == 'Fitness') {
                 _subcategoryList = _fitness;
+                tabIndex = 3;
               } else if (category == 'Space Saver') {
                 _subcategoryList = _spacesaver;
+                tabIndex = 4;
               } else if (category == 'Kitchen') {
                 _subcategoryList = _kitchen;
+                tabIndex = 5;
               }
               setState(() {
                 _selectedSubcategory = null;
                 _selectedCategory = category;
               });
             },
+            validator: _validate,
           ),
         ),
         // Country Dropdown Ends here
@@ -134,13 +146,14 @@ class _DropDownState extends State<DropDown> {
         // Province Dropdown
         Flexible(
           fit: FlexFit.loose,
-          child: DropdownButton<String>(
+          child: DropdownButtonFormField<String>(
             style: Theme.of(context)
                 .textTheme
                 .bodyText1
                 .copyWith(color: Colors.black87),
             hint: Text('Subcategory'),
             value: _selectedSubcategory,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             isExpanded: true,
             items: _subcategoryList.keys.toList().map((String value) {
               return DropdownMenuItem<String>(
@@ -151,9 +164,14 @@ class _DropDownState extends State<DropDown> {
             onChanged: (subcategory) {
               setState(() {
                 _selectedSubcategory = subcategory;
-                widget.notifyParent(_subcategoryList[subcategory]);
+                print(_selectedCategory);
+                print(_selectedSubcategory);
+                print(_subcategoryList[subcategory]);
+                widget.notifyParent(_subcategoryList[subcategory],
+                    _selectedCategory, _selectedSubcategory, tabIndex);
               });
             },
+            validator: _validate,
           ),
         ),
       ],

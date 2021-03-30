@@ -59,7 +59,7 @@ class _WishlistBuilderState extends State<WishlistBuilder> {
                 ),
                 Text(
                   "Your wishlist is empty",
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87),
                 ),
           ],
         )

@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
-import '../services/wishlistservice.dart';
-import '../screens/wishlistbuilder.dart';
-import '../models/product.dart';
 import 'package:dio/dio.dart';
+import 'package:rht/models/userproduct..dart';
+import 'package:rht/services/orderservice.dart';
 
-class Wishlist extends StatefulWidget {
-  final String pathUrl;
-  final String userId;
-  final void Function(int) onButtonTapped;
-  Wishlist({this.pathUrl, this.userId, this.onButtonTapped});
+import '../splash_screen.dart';
+import '../starter.dart';
+import 'currentordersbuilder.dart';
+
+class CurrentOrders extends StatefulWidget {
   @override
-  _WishlistState createState() => _WishlistState();
+  _CurrentOrdersState createState() => _CurrentOrdersState();
 }
 
-class _WishlistState extends State<Wishlist> {
+class _CurrentOrdersState extends State<CurrentOrders> {
   Dio dio = new Dio();
-  WishlistService wishlistService = new WishlistService();
+  OrderService orderService = new OrderService();
+  Starter _starter;
+  //  GlobalKey<StarterState> _starterKey;
+
   var futureProducts;
   void initState() {
     super.initState();
+    _starter = new Starter(
+      location: finalLocation,
+      locationId: finalLocationId,
+      index: 3,
+      userId: finalId,
+    );
+
     setState(() {
-      futureProducts = wishlistService.getWishlistedProducts(widget.userId);
+      futureProducts = orderService.getCurrentOrders(finalId);
+      // test();
     });
+  }
+
+  void test() async {
+    var testVar = await orderService.getTransitOrders(finalId);
+    print(testVar.toString());
   }
 
   @override
@@ -29,21 +44,31 @@ class _WishlistState extends State<Wishlist> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          leading: IconButton(
+              onPressed: () {
+                // Navigator.pop(context);
+                Starter.starterKey.currentState.onButtonTapped2(3);
+                // Navigator.pop(context);
+                // widget.onButtonTapped(3);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              )),
+          title: Text(
+            "Current Orders",
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
         body: SingleChildScrollView(
-            // height: MediaQuery.of(context).size.h,
             child: Column(
           children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Text(
-                "My Wishlist",
-                style: Theme.of(context).textTheme.headline6.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            FutureBuilder<List<Product>>(
+            FutureBuilder<List<UserProduct>>(
                 future: futureProducts,
                 // ignore: missing_return
                 builder: (context, AsyncSnapshot snapshot) {
@@ -62,7 +87,7 @@ class _WishlistState extends State<Wishlist> {
                               // scale: 0.5,
                             ),
                             Text(
-                              "Your wishlist is empty",
+                              "You haven't ordered anything",
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -74,15 +99,15 @@ class _WishlistState extends State<Wishlist> {
                     } else {
                       print(snapshot.data);
                       return Container(
-                          child: WishlistBuilder(snapshot.data, widget.userId,
-                              widget.onButtonTapped));
+                          child: CurrentOrdersBuilder(snapshot.data));
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
                     return Text(
                       'error',
                       style: Theme.of(context).textTheme.headline3,
                     );
-                  } else {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 30),

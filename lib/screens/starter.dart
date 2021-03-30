@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rht/screens/myprofile/profilenew.dart';
 import '../screens/splash_screen.dart';
 import '../widgets/navigationbar.dart';
@@ -9,23 +8,28 @@ import './landingpage/landingpage.dart';
 import '../screens/wishlist.dart';
 
 class Starter extends StatefulWidget {
+  static final GlobalKey<StarterState> starterKey = GlobalKey();
+  // super(key:starterKey);
   final String location;
   final String locationId;
   final String userId;
   final int index;
-
-  Starter({this.location, this.locationId, this.index, this.userId});
+  Function testMethod;
+  // Starter({Key key}) : super(key: key);
+  Starter({this.location, this.locationId, this.index, this.userId})
+      : super(key: starterKey);
   @override
-  _StarterState createState() => _StarterState();
+  StarterState createState() => StarterState();
 }
 
-class _StarterState extends State<Starter> {
+class StarterState extends State<Starter> {
   final GlobalKey<ProductsState> _productKey = GlobalKey();
+  final GlobalKey<StarterState> _myKey = GlobalKey();
   PageController _pageController = PageController();
   int _currentIndex = 0;
   String _location;
   String _locationId;
-  int _index=0;
+  int _index = 0;
   // TabController _tabController;
 
   void initState() {
@@ -33,6 +37,7 @@ class _StarterState extends State<Starter> {
     _locationId = widget.locationId;
     // _index = widget.index;
     super.initState();
+    widget.testMethod = onButtonTapped2;
   }
 
   void _onPageChanged(int index) {
@@ -53,6 +58,15 @@ class _StarterState extends State<Starter> {
       // _tabController = tabController;
     });
     print("re" + _index.toString());
+    _pageController.jumpToPage(pageindex);
+    // _productKey.currentState.tabController.animateTo(_index);
+  }
+
+  void onButtonTapped2(int pageindex) {
+    
+    // print("re" + _index.toString());
+    Navigator.pop(context);
+    print(pageindex);
     _pageController.jumpToPage(pageindex);
     // _productKey.currentState.tabController.animateTo(_index);
   }
@@ -80,7 +94,7 @@ class _StarterState extends State<Starter> {
         userId: widget.userId,
         // onButtonTapped: onButtonTapped2,
       ),
-      ProfileSecondPage()
+      ProfileSecondPage(onButtonTapped: onButtonTapped2)
     ];
     return Scaffold(
         body: PageView(

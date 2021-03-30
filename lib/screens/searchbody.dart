@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import '../widgets/productlist.dart';
 import '../models/product.dart';
 
@@ -58,8 +59,12 @@ class _SearchBodyState extends State<SearchBody> {
         child: Scaffold(
             backgroundColor: Colors.white,
             body: SingleChildScrollView(
+              // scrollDirection: Axis.vertical,
                 // height: MediaQuery.of(context).size.h,
-                child: Column(children: [
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  children: [
               Container(
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -93,8 +98,7 @@ class _SearchBodyState extends State<SearchBody> {
                         );
                       } else {
                         print(snapshot.data);
-                        return Container(
-                            child: ProductList(snapshot.data, widget.userId));
+                        return ProductList(snapshot.data, widget.userId);
                       }
                     } else if (snapshot.connectionState ==
                         ConnectionState.none) {

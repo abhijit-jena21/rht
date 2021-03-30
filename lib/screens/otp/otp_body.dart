@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/constants.dart';
 import '../../utils/size_config.dart';
 import '../splash_screen.dart';
 import './otp_form.dart';

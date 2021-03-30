@@ -90,9 +90,9 @@ class _CreatProfileState extends State<CreatProfile> {
             child: Center(child: Icon(Icons.arrow_back_rounded)),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                color: Theme.of(context).accentColor,
-              ),
+              // border: Border.all(
+              //   color: Theme.of(context).accentColor,
+              // ),
             ),
           ),
         ),

@@ -12,7 +12,7 @@ class Location extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Container myItems(
-        AssetImage assetImage, String location, String locationId) {
+        AssetImage assetImage, String location, String locationId){
       Image image = Image(
         image: assetImage,
         width: 160.0,
@@ -27,7 +27,7 @@ class Location extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               side: BorderSide(width: 0.5, color: Theme.of(context).accentColor)),
-            // elevation: 3,
+            elevation: 0,
             child: Column(
               children: [
                 image,
@@ -86,7 +86,7 @@ class Location extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.close,
-              color: Colors.black87,
+              color: finalLocation == null ? Colors.transparent :Colors.black87,
             ),
             onPressed:
                 finalLocation == null ? null : () => Navigator.pop(context),

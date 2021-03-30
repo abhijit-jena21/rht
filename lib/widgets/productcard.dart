@@ -22,8 +22,20 @@ class ProductCard extends StatefulWidget {
   final int duration;
   final String locationId;
   final List<String> items;
-  ProductCard(this.userId, this.productId, this.name, this.img, this.details,
-      this.price, this.rent, this.deposit, this.duration, this.items, this.locationId);
+  final int stock;
+  ProductCard(
+      this.userId,
+      this.productId,
+      this.name,
+      this.img,
+      this.details,
+      this.price,
+      this.rent,
+      this.deposit,
+      this.duration,
+      this.items,
+      this.stock,
+      this.locationId);
   @override
   _ProductCardState createState() => _ProductCardState();
 }
@@ -72,7 +84,8 @@ class _ProductCardState extends State<ProductCard> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProductDetailBuilder(widget.productId)));
+                      builder: (context) =>
+                          ProductDetailBuilder(widget.productId)));
             },
             child: Container(
                 decoration: BoxDecoration(
@@ -111,21 +124,25 @@ class _ProductCardState extends State<ProductCard> {
                                     topRight: Radius.circular(5)),
                                 image: DecorationImage(
                                     image: NetworkImage(widget.img[0]),
+                                    colorFilter: (widget.stock<=0 || widget.stock==null) ? ColorFilter.mode(
+                                      Colors.grey,
+                                      BlendMode.saturation
+                                    ):null,
                                     fit: BoxFit.cover))),
-                        if (widget.items.length == 0)
+                        if (widget.stock <= 0 || widget.stock == null)
                           Positioned(
-                            bottom: 5,
+                            bottom: 15,
                             // right: 10,
                             child: SizedBox(
                                 height: 25,
-                                width: 75,
+                                width: 100,
                                 child: Container(
                                   alignment: Alignment.center,
                                   color: Colors.redAccent,
                                   child: Text(
                                     "Out of stock",
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 10),
+                                        color: Colors.white, fontSize: 12),
                                   ),
                                 )),
                           ),
